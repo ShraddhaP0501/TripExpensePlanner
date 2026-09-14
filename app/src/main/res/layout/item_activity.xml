@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/padding_small"
+    app:cardCornerRadius="@dimen/card_corner_radius"
+    app:cardElevation="@dimen/card_elevation"
+    app:cardBackgroundColor="@color/cardBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_medium">
+
+        <TextView
+            android:id="@+id/textActivityName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textPrimary"
+            android:textSize="@dimen/text_size_subtitle"
+            android:textStyle="bold"
+            tools:text="City Museum Tour" />
+
+        <TextView
+            android:id="@+id/textActivityDateTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_tiny"
+            android:textColor="@color/primary"
+            android:textSize="@dimen/text_size_body"
+            tools:text="2026-10-12, 10:00 AM" />
+
+        <TextView
+            android:id="@+id/textActivityDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_tiny"
+            android:textColor="@color/textSecondary"
+            android:textSize="@dimen/text_size_body"
+            tools:text="Meet at the main gate." />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_small"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonEditActivity"
+                style="@style/AppButton.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:paddingStart="@dimen/padding_small"
+                android:paddingEnd="@dimen/padding_small"
+                android:text="@string/label_edit"
+                android:textColor="@color/primary" />
+
+            <Button
+                android:id="@+id/buttonDeleteActivity"
+                style="@style/AppButton.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:paddingStart="@dimen/padding_small"
+                android:paddingEnd="@dimen/padding_small"
+                android:text="@string/label_delete"
+                android:textColor="@color/danger" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

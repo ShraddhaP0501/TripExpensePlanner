@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    tools:context=".ParticipantsActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/padding_small"
+        android:paddingTop="@dimen/padding_large"
+        android:paddingEnd="@dimen/padding_medium"
+        android:paddingBottom="@dimen/padding_large">
+
+        <ImageButton
+            android:id="@+id/buttonBack"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/content_desc_back"
+            android:padding="@dimen/padding_small"
+            android:src="@drawable/ic_back_arrow" />
+
+        <TextView
+            android:id="@+id/textParticipantsTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingEnd="@dimen/touch_target_min"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_title"
+            android:textStyle="bold"
+            tools:text="Participants" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonAddParticipant"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_margin="@dimen/padding_medium"
+        android:backgroundTint="@color/primary"
+        android:text="@string/label_add_participant"
+        android:textColor="@color/white" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textEmptyParticipants"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="@dimen/padding_large"
+            android:text="@string/msg_no_participants"
+            android:textColor="@color/textSecondary"
+            android:textSize="@dimen/text_size_subtitle" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerParticipants"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingStart="@dimen/padding_medium"
+            android:paddingEnd="@dimen/padding_medium"
+            android:visibility="gone"
+            tools:listitem="@layout/item_participant" />
+
+    </FrameLayout>
+
+</LinearLayout>

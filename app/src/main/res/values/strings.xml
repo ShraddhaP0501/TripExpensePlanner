@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Trip Expense and Planner</string>
+    <string name="welcome_message">Trip Expense and Planner</string>
+    <string name="content_desc_back">Back</string>
+
+    <!-- Dashboard -->
+    <string name="label_add_new_trip">+ Add New Trip</string>
+    <string name="label_my_trips">My Trips</string>
+    <string name="label_expenses">Expenses</string>
+    <string name="label_upcoming_activities">Upcoming Activities</string>
+    <string name="label_total_expenses">Total Expenses</string>
+    <string name="placeholder_total_expenses">₹0.00</string>
+    <string name="msg_no_upcoming_activities">No upcoming activities yet</string>
+    <string name="msg_feature_coming_soon">This feature is coming soon</string>
+
+    <!-- Add Trip screen -->
+    <string name="title_add_trip">Add New Trip</string>
+    <string name="hint_trip_name">Trip Name</string>
+    <string name="hint_destination">Destination</string>
+    <string name="hint_start_date">Start Date</string>
+    <string name="hint_end_date">End Date</string>
+    <string name="hint_notes">Notes (optional)</string>
+    <string name="label_save_trip">Save Trip</string>
+    <string name="label_cancel">Cancel</string>
+
+    <string name="error_trip_name_required">Trip name is required</string>
+    <string name="error_destination_required">Destination is required</string>
+    <string name="error_start_date_required">Start date is required</string>
+    <string name="error_end_date_required">End date is required</string>
+    <string name="error_start_after_end">Start date cannot be after end date</string>
+    <string name="msg_trip_saved">Trip saved successfully</string>
+    <string name="error_saving_trip">Something went wrong while saving the trip. Please try again.</string>
+
+    <!-- My Trips screen -->
+    <string name="title_my_trips">My Trips</string>
+    <string name="msg_no_trips">No trips yet. Tap \"Add New Trip\" on the Dashboard to create one.</string>
+
+    <!-- Trip Details screen -->
+    <string name="title_trip_details">Trip Details</string>
+    <string name="label_destination">Destination</string>
+    <string name="label_start_date">Start Date</string>
+    <string name="label_end_date">End Date</string>
+    <string name="label_notes">Notes</string>
+    <string name="label_edit_trip">Edit Trip</string>
+    <string name="label_delete_trip">Delete Trip</string>
+    <string name="error_trip_not_found">This trip could not be found. It may have been deleted.</string>
+
+    <!-- Delete confirmation -->
+    <string name="dialog_delete_trip_title">Delete Trip</string>
+    <string name="dialog_delete_trip_message">Are you sure you want to delete this trip? This cannot be undone.</string>
+    <string name="label_delete">Delete</string>
+    <string name="label_edit">Edit</string>
+    <string name="msg_trip_deleted">Trip deleted</string>
+    <string name="error_deleting_trip">Something went wrong while deleting the trip. Please try again.</string>
+
+    <!-- Edit Trip (reuses the Add Trip screen) -->
+    <string name="title_edit_trip">Edit Trip</string>
+    <string name="label_update_trip">Update Trip</string>
+    <string name="msg_trip_updated">Trip updated successfully</string>
+
+    <!-- Trip Details: section buttons (placeholder screens for now) -->
+    <string name="label_trip_sections">Trip Sections</string>
+    <string name="label_itinerary">Itinerary</string>
+    <string name="label_trip_expenses">Expenses</string>
+    <string name="label_participants">Participants</string>
+    <string name="label_trip_summary">Trip Summary</string>
+
+    <!-- Placeholder screen -->
+    <string name="msg_placeholder_screen">This feature is coming soon for this trip.</string>
+    <string name="format_trip_id">Trip ID: %1$d</string>
+
+    <!-- Itinerary list screen -->
+    <string name="title_itinerary">Itinerary</string>
+    <string name="label_add_activity">+ Add Activity</string>
+    <string name="msg_no_activities">No activities yet. Tap \"Add Activity\" to plan one.</string>
+    <string name="msg_activity_deleted">Activity deleted</string>
+    <string name="error_deleting_activity">Something went wrong while deleting the activity. Please try again.</string>
+    <string name="dialog_delete_activity_title">Delete Activity</string>
+    <string name="dialog_delete_activity_message">Are you sure you want to delete this activity? This cannot be undone.</string>
+
+    <!-- Add / Edit Activity screen -->
+    <string name="title_add_activity">Add Activity</string>
+    <string name="title_edit_activity">Edit Activity</string>
+    <string name="hint_activity_name">Activity Name</string>
+    <string name="hint_activity_date">Date</string>
+    <string name="hint_activity_time">Time (optional)</string>
+    <string name="hint_activity_description">Description (optional)</string>
+    <string name="label_save_activity">Save Activity</string>
+    <string name="label_update_activity">Update Activity</string>
+
+    <string name="error_activity_name_required">Activity name is required</string>
+    <string name="error_activity_date_required">Date is required</string>
+    <string name="msg_activity_saved">Activity saved successfully</string>
+    <string name="msg_activity_updated">Activity updated successfully</string>
+    <string name="error_saving_activity">Something went wrong while saving the activity. Please try again.</string>
+    <string name="error_activity_not_found">This activity could not be found. It may have been deleted.</string>
+
+    <!-- Expenses list screen -->
+    <string name="title_expenses">Expenses</string>
+    <string name="label_add_expense">+ Add Expense</string>
+    <string name="label_total_expense">Total Expense</string>
+    <string name="msg_no_expenses">No expenses yet. Tap \"Add Expense\" to record one.</string>
+    <string name="msg_expense_deleted">Expense deleted</string>
+    <string name="error_deleting_expense">Something went wrong while deleting the expense. Please try again.</string>
+    <string name="dialog_delete_expense_title">Delete Expense</string>
+    <string name="dialog_delete_expense_message">Are you sure you want to delete this expense? This cannot be undone.</string>
+    <string name="format_amount">₹%1$.2f</string>
+    <string name="format_paid_by">Paid by %1$s</string>
+
+    <!-- Add / Edit Expense screen -->
+    <string name="title_add_expense">Add Expense</string>
+    <string name="title_edit_expense">Edit Expense</string>
+    <string name="hint_category">Category</string>
+    <string name="hint_amount">Amount</string>
+    <string name="hint_paid_by">Paid By</string>
+    <string name="hint_expense_description">Description (optional)</string>
+    <string name="hint_expense_date">Expense Date</string>
+    <string name="label_save_expense">Save Expense</string>
+    <string name="label_update_expense">Update Expense</string>
+
+    <string name="error_category_required">Please select a category</string>
+    <string name="error_amount_required">Amount is required</string>
+    <string name="error_amount_invalid">Please enter a valid amount</string>
+    <string name="error_amount_must_be_positive">Amount must be greater than 0</string>
+    <string name="error_paid_by_required">Please select who paid</string>
+    <string name="error_expense_date_required">Expense date is required</string>
+    <string name="msg_expense_saved">Expense saved successfully</string>
+    <string name="msg_expense_updated">Expense updated successfully</string>
+    <string name="error_saving_expense">Something went wrong while saving the expense. Please try again.</string>
+    <string name="error_expense_not_found">This expense could not be found. It may have been deleted.</string>
+
+    <!-- Expense splitting -->
+    <string name="label_split_among">Split Among</string>
+    <string name="placeholder_select_payer">Select Payer</string>
+    <string name="error_split_participants_required">Please select at least one participant to split the expense</string>
+    <string name="msg_no_participants_for_split">This trip has no participants yet. Add participants first so this expense can be split.</string>
+
+    <!-- Participants list screen -->
+    <string name="title_participants">Participants</string>
+    <string name="label_add_participant">+ Add Participant</string>
+    <string name="msg_no_participants">No participants yet. Tap \"Add Participant\" to add one.</string>
+    <string name="msg_participant_deleted">Participant deleted</string>
+    <string name="error_deleting_participant">Something went wrong while deleting the participant. Please try again.</string>
+    <string name="dialog_delete_participant_title">Delete Participant</string>
+    <string name="dialog_delete_participant_message">Are you sure you want to remove this participant? This cannot be undone.</string>
+
+    <!-- Add / Edit Participant screen -->
+    <string name="title_add_participant">Add Participant</string>
+    <string name="title_edit_participant">Edit Participant</string>
+    <string name="hint_participant_name">Participant Name</string>
+    <string name="label_save_participant">Save Participant</string>
+    <string name="label_update_participant">Update Participant</string>
+
+    <string name="error_participant_name_required">Participant name is required</string>
+    <string name="msg_participant_saved">Participant saved successfully</string>
+    <string name="msg_participant_updated">Participant updated successfully</string>
+    <string name="error_saving_participant">Something went wrong while saving the participant. Please try again.</string>
+    <string name="error_participant_not_found">This participant could not be found. It may have been deleted.</string>
+
+    <!-- Trip Summary screen -->
+    <string name="title_trip_summary">Trip Summary</string>
+    <string name="label_trip_overview">Trip Overview</string>
+    <string name="label_statistics">Statistics</string>
+    <string name="label_category_totals">Category-wise Expenses</string>
+    <string name="label_balances">Balances</string>
+    <string name="label_who_owes_whom">Who Owes Whom</string>
+    <string name="label_paid_amount">Paid</string>
+    <string name="label_share_amount">Share</string>
+    <string name="label_balance">Balance</string>
+    <string name="format_gets_back">Gets back %1$s</string>
+    <string name="format_owes_amount">Owes %1$s</string>
+    <string name="msg_settled_up">Settled up</string>
+    <string name="format_settlement">%1$s owes %2$s %3$s</string>
+    <string name="msg_all_settled">Everyone is settled up!</string>
+    <string name="msg_no_summary_data">Add participants to see balances and who owes whom.</string>
+
+    <string name="format_trip_name">Trip Name: %1$s</string>
+    <string name="format_destination">Destination: %1$s</string>
+    <string name="format_date_range">%1$s to %2$s</string>
+    <string name="format_duration_days">Duration: %1$d day(s)</string>
+    <string name="msg_duration_unavailable">Duration: not available</string>
+    <string name="format_activity_count">Activities: %1$d</string>
+    <string name="format_expense_count">Expenses: %1$d</string>
+    <string name="format_participant_count">Participants: %1$d</string>
+    <string name="format_total_expense_label">Total Expense: %1$s</string>
+    <string name="format_category_amount">%1$s: %2$s</string>
+
+    <!-- Reminders list screen -->
+    <string name="label_reminders">Reminders</string>
+    <string name="title_reminders">Reminders</string>
+    <string name="label_add_reminder">+ Add Reminder</string>
+    <string name="msg_no_reminders">No reminders yet. Tap \"Add Reminder\" to create one.</string>
+    <string name="label_cancel_reminder">Cancel Reminder</string>
+    <string name="dialog_cancel_reminder_title">Cancel Reminder</string>
+    <string name="dialog_cancel_reminder_message">Are you sure you want to cancel this reminder? It will no longer notify you.</string>
+    <string name="msg_reminder_cancelled">Reminder cancelled</string>
+    <string name="error_cancelling_reminder">Something went wrong while cancelling the reminder. Please try again.</string>
+    <string name="format_reminder_datetime">%1$s at %2$s</string>
+
+    <!-- Add Reminder screen -->
+    <string name="title_add_reminder">Add Reminder</string>
+    <string name="hint_reminder_title">Title</string>
+    <string name="hint_reminder_type">Reminder Type</string>
+    <string name="hint_reminder_date">Date</string>
+    <string name="hint_reminder_time">Time</string>
+    <string name="hint_reminder_note">Note (optional)</string>
+    <string name="label_save_reminder">Save Reminder</string>
+
+    <string name="error_reminder_title_required">Title is required</string>
+    <string name="error_reminder_type_required">Please select a reminder type</string>
+    <string name="error_reminder_date_required">Date is required</string>
+    <string name="error_reminder_time_required">Time is required</string>
+    <string name="error_reminder_in_past">Reminder date and time must be in the future</string>
+    <string name="msg_reminder_saved">Reminder saved. You\'ll be notified at the selected time.</string>
+    <string name="msg_reminder_saved_inexact">Reminder saved, but exact alarms aren\'t allowed for this app — it may fire a little late. You can allow exact alarms in system Settings.</string>
+    <string name="error_saving_reminder">Something went wrong while saving the reminder. Please try again.</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_name">Trip Reminders</string>
+    <string name="notification_channel_description">Notifications for trip activity, booking, and note reminders</string>
+    <string name="notification_default_text">Tap to open this trip</string>
+    <string name="msg_notification_permission_denied">Notifications are turned off, so reminders won\'t be able to alert you. You can enable them in system Settings.</string>
+</resources>
