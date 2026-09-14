@@ -13,6 +13,7 @@ import com.example.tripexpenseplanner.model.CategoryTotal;
 import com.example.tripexpenseplanner.model.Expense;
 import com.example.tripexpenseplanner.model.ExpenseParticipant;
 import com.example.tripexpenseplanner.model.Participant;
+import com.example.tripexpenseplanner.model.Reminder;
 import com.example.tripexpenseplanner.model.Trip;
 import com.example.tripexpenseplanner.model.TripActivity;
 
@@ -24,7 +25,7 @@ import com.example.tripexpenseplanner.model.TripActivity;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "TripExpensePlanner.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // ---------- trips ----------
     public static final String TABLE_TRIPS = "trips";
@@ -66,6 +67,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_EP_EXPENSE_ID = "expense_id";
     public static final String COLUMN_EP_PARTICIPANT_ID = "participant_id";
     public static final String COLUMN_EP_SHARE_AMOUNT = "share_amount";
+
+    // ---------- reminders ----------
+    public static final String TABLE_REMINDERS = "reminders";
+    public static final String COLUMN_REMINDER_ID = "id";
+    public static final String COLUMN_REMINDER_TRIP_ID = "trip_id";
+    public static final String COLUMN_REMINDER_TITLE = "title";
+    public static final String COLUMN_REMINDER_TYPE = "reminder_type";
+    public static final String COLUMN_REMINDER_DATE = "reminder_date";
+    public static final String COLUMN_REMINDER_TIME = "reminder_time";
+    public static final String COLUMN_REMINDER_NOTE = "note";
 
     private static final String CREATE_TABLE_TRIPS =
             "CREATE TABLE " + TABLE_TRIPS + " (" +
@@ -118,6 +129,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     "FOREIGN KEY(" + COLUMN_EP_PARTICIPANT_ID + ") REFERENCES " + TABLE_PARTICIPANTS + "(" + COLUMN_PARTICIPANT_ID + ")" +
                     ");";
 
+    private static final String CREATE_TABLE_REMINDERS =
+            "CREATE TABLE " + TABLE_REMINDERS + " (" +
+                    COLUMN_REMINDER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COLUMN_REMINDER_TRIP_ID + " INTEGER NOT NULL, " +
+                    COLUMN_REMINDER_TITLE + " TEXT NOT NULL, " +
+                    COLUMN_REMINDER_TYPE + " TEXT NOT NULL, " +
+                    COLUMN_REMINDER_DATE + " TEXT NOT NULL, " +
+                    COLUMN_REMINDER_TIME + " TEXT NOT NULL, " +
+                    COLUMN_REMINDER_NOTE + " TEXT, " +
+                    "FOREIGN KEY(" + COLUMN_REMINDER_TRIP_ID + ") REFERENCES " + TABLE_TRIPS + "(" + COLUMN_TRIP_ID + ")" +
+                    ");";
+
     public DatabaseHelper(Context context) {
         super(context.getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -136,12 +159,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_EXPENSES);
         db.execSQL(CREATE_TABLE_PARTICIPANTS);
         db.execSQL(CREATE_TABLE_EXPENSE_PARTICIPANTS);
+        db.execSQL(CREATE_TABLE_REMINDERS);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Simple upgrade strategy for now: drop everything and recreate.
         // Child tables are dropped before their parent tables.
+        // NOTE: this wipes any existing data on an upgrade — fine for this
+        // project's current stage, but not something to ship as-is.
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_REMINDERS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPENSE_PARTICIPANTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PARTICIPANTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPENSES);
@@ -529,5 +556,92 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         expenseParticipant.setParticipantId(cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_EP_PARTICIPANT_ID)));
         expenseParticipant.setShareAmount(cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_EP_SHARE_AMOUNT)));
         return expenseParticipant;
+    }
+
+    // =========================================================================================
+    // REMINDERS
+    // =========================================================================================
+
+    public long insertReminder(Reminder reminder) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_REMINDER_TRIP_ID, reminder.getTripId());
+        values.put(COLUMN_REMINDER_TITLE, reminder.getTitle());
+        values.put(COLUMN_REMINDER_TYPE, reminder.getReminderType());
+        values.put(COLUMN_REMINDER_DATE, reminder.getReminderDate());
+        values.put(COLUMN_REMINDER_TIME, reminder.getReminderTime());
+        values.put(COLUMN_REMINDER_NOTE, reminder.getNote());
+        return db.insert(TABLE_REMINDERS, null, values);
+    }
+
+    public int updateReminder(Reminder reminder) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_REMINDER_TRIP_ID, reminder.getTripId());
+        values.put(COLUMN_REMINDER_TITLE, reminder.getTitle());
+        values.put(COLUMN_REMINDER_TYPE, reminder.getReminderType());
+        values.put(COLUMN_REMINDER_DATE, reminder.getReminderDate());
+        values.put(COLUMN_REMINDER_TIME, reminder.getReminderTime());
+        values.put(COLUMN_REMINDER_NOTE, reminder.getNote());
+        return db.update(TABLE_REMINDERS, values, COLUMN_REMINDER_ID + " = ?",
+                new String[]{String.valueOf(reminder.getId())});
+    }
+
+    public int deleteReminder(long reminderId) {
+        SQLiteDatabase db = getWritableDatabase();
+        return db.delete(TABLE_REMINDERS, COLUMN_REMINDER_ID + " = ?", new String[]{String.valueOf(reminderId)});
+    }
+
+    public Reminder getReminder(long reminderId) {
+        SQLiteDatabase db = getReadableDatabase();
+        Reminder reminder = null;
+        try (Cursor cursor = db.query(TABLE_REMINDERS, null, COLUMN_REMINDER_ID + " = ?",
+                new String[]{String.valueOf(reminderId)}, null, null, null)) {
+            if (cursor.moveToFirst()) {
+                reminder = cursorToReminder(cursor);
+            }
+        }
+        return reminder;
+    }
+
+    public List<Reminder> getRemindersByTrip(long tripId) {
+        List<Reminder> reminders = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        String orderBy = COLUMN_REMINDER_DATE + " ASC, " + COLUMN_REMINDER_TIME + " ASC";
+        try (Cursor cursor = db.query(TABLE_REMINDERS, null, COLUMN_REMINDER_TRIP_ID + " = ?",
+                new String[]{String.valueOf(tripId)}, null, null, orderBy)) {
+            while (cursor.moveToNext()) {
+                reminders.add(cursorToReminder(cursor));
+            }
+        }
+        return reminders;
+    }
+
+    /**
+     * Every reminder across every trip. Used on device boot to re-schedule
+     * alarms, since Android clears all AlarmManager alarms on restart.
+     */
+    public List<Reminder> getAllReminders() {
+        List<Reminder> reminders = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        String orderBy = COLUMN_REMINDER_DATE + " ASC, " + COLUMN_REMINDER_TIME + " ASC";
+        try (Cursor cursor = db.query(TABLE_REMINDERS, null, null, null, null, null, orderBy)) {
+            while (cursor.moveToNext()) {
+                reminders.add(cursorToReminder(cursor));
+            }
+        }
+        return reminders;
+    }
+
+    private Reminder cursorToReminder(Cursor cursor) {
+        Reminder reminder = new Reminder();
+        reminder.setId(cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_REMINDER_ID)));
+        reminder.setTripId(cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_REMINDER_TRIP_ID)));
+        reminder.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REMINDER_TITLE)));
+        reminder.setReminderType(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REMINDER_TYPE)));
+        reminder.setReminderDate(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REMINDER_DATE)));
+        reminder.setReminderTime(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REMINDER_TIME)));
+        reminder.setNote(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REMINDER_NOTE)));
+        return reminder;
     }
 }

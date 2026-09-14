@@ -184,4 +184,40 @@
     <string name="format_participant_count">Participants: %1$d</string>
     <string name="format_total_expense_label">Total Expense: %1$s</string>
     <string name="format_category_amount">%1$s: %2$s</string>
+
+    <!-- Reminders list screen -->
+    <string name="label_reminders">Reminders</string>
+    <string name="title_reminders">Reminders</string>
+    <string name="label_add_reminder">+ Add Reminder</string>
+    <string name="msg_no_reminders">No reminders yet. Tap \"Add Reminder\" to create one.</string>
+    <string name="label_cancel_reminder">Cancel Reminder</string>
+    <string name="dialog_cancel_reminder_title">Cancel Reminder</string>
+    <string name="dialog_cancel_reminder_message">Are you sure you want to cancel this reminder? It will no longer notify you.</string>
+    <string name="msg_reminder_cancelled">Reminder cancelled</string>
+    <string name="error_cancelling_reminder">Something went wrong while cancelling the reminder. Please try again.</string>
+    <string name="format_reminder_datetime">%1$s at %2$s</string>
+
+    <!-- Add Reminder screen -->
+    <string name="title_add_reminder">Add Reminder</string>
+    <string name="hint_reminder_title">Title</string>
+    <string name="hint_reminder_type">Reminder Type</string>
+    <string name="hint_reminder_date">Date</string>
+    <string name="hint_reminder_time">Time</string>
+    <string name="hint_reminder_note">Note (optional)</string>
+    <string name="label_save_reminder">Save Reminder</string>
+
+    <string name="error_reminder_title_required">Title is required</string>
+    <string name="error_reminder_type_required">Please select a reminder type</string>
+    <string name="error_reminder_date_required">Date is required</string>
+    <string name="error_reminder_time_required">Time is required</string>
+    <string name="error_reminder_in_past">Reminder date and time must be in the future</string>
+    <string name="msg_reminder_saved">Reminder saved. You\'ll be notified at the selected time.</string>
+    <string name="msg_reminder_saved_inexact">Reminder saved, but exact alarms aren\'t allowed for this app — it may fire a little late. You can allow exact alarms in system Settings.</string>
+    <string name="error_saving_reminder">Something went wrong while saving the reminder. Please try again.</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_name">Trip Reminders</string>
+    <string name="notification_channel_description">Notifications for trip activity, booking, and note reminders</string>
+    <string name="notification_default_text">Tap to open this trip</string>
+    <string name="msg_notification_permission_denied">Notifications are turned off, so reminders won\'t be able to alert you. You can enable them in system Settings.</string>
 </resources>

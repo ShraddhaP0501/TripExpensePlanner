@@ -57,6 +57,7 @@ public class TripDetailsActivity extends AppCompatActivity {
         findViewById(R.id.buttonExpenses).setOnClickListener(v -> openExpenses());
         findViewById(R.id.buttonParticipants).setOnClickListener(v -> openParticipants());
         findViewById(R.id.buttonTripSummary).setOnClickListener(v -> openTripSummary());
+        findViewById(R.id.buttonReminders).setOnClickListener(v -> openReminders());
 
         if (tripId == NO_TRIP_ID) {
             Toast.makeText(this, R.string.error_trip_not_found, Toast.LENGTH_LONG).show();
@@ -120,6 +121,12 @@ public class TripDetailsActivity extends AppCompatActivity {
     private void openTripSummary() {
         Intent intent = new Intent(this, TripSummaryActivity.class);
         intent.putExtra(TripSummaryActivity.EXTRA_TRIP_ID, tripId);
+        startActivity(intent);
+    }
+
+    private void openReminders() {
+        Intent intent = new Intent(this, RemindersActivity.class);
+        intent.putExtra(RemindersActivity.EXTRA_TRIP_ID, tripId);
         startActivity(intent);
     }
 

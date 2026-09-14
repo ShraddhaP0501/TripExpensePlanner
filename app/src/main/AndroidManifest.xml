@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Needed to actually show a notification on Android 13+ (API 33). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Needed to schedule a reminder to fire at an exact time on Android 12+ (API 31). -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <!-- Lets scheduled reminders survive a device restart (see BootReceiver). -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -68,6 +75,28 @@
             android:name=".TripSummaryActivity"
             android:exported="false"
             android:label="@string/label_trip_summary" />
+
+        <activity
+            android:name=".RemindersActivity"
+            android:exported="false"
+            android:label="@string/label_reminders" />
+
+        <activity
+            android:name=".AddReminderActivity"
+            android:exported="false"
+            android:label="@string/title_add_reminder" />
+
+        <receiver
+            android:name=".notification.ReminderReceiver"
+            android:exported="false" />
+
+        <receiver
+            android:name=".notification.BootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 
