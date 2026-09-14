@@ -12,4 +12,22 @@
     <string name="placeholder_total_expenses">₹0.00</string>
     <string name="msg_no_upcoming_activities">No upcoming activities yet</string>
     <string name="msg_feature_coming_soon">This feature is coming soon</string>
+
+    <!-- Add Trip screen -->
+    <string name="title_add_trip">Add New Trip</string>
+    <string name="hint_trip_name">Trip Name</string>
+    <string name="hint_destination">Destination</string>
+    <string name="hint_start_date">Start Date</string>
+    <string name="hint_end_date">End Date</string>
+    <string name="hint_notes">Notes (optional)</string>
+    <string name="label_save_trip">Save Trip</string>
+    <string name="label_cancel">Cancel</string>
+
+    <string name="error_trip_name_required">Trip name is required</string>
+    <string name="error_destination_required">Destination is required</string>
+    <string name="error_start_date_required">Start date is required</string>
+    <string name="error_end_date_required">End date is required</string>
+    <string name="error_start_after_end">Start date cannot be after end date</string>
+    <string name="msg_trip_saved">Trip saved successfully</string>
+    <string name="error_saving_trip">Something went wrong while saving the trip. Please try again.</string>
 </resources>

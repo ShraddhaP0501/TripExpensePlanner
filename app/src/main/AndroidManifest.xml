@@ -18,6 +18,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".AddTripActivity"
+            android:exported="false"
+            android:label="@string/title_add_trip" />
+
     </application>
 
 </manifest>

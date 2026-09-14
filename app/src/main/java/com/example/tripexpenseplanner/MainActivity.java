@@ -1,5 +1,6 @@
 package com.example.tripexpenseplanner;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
@@ -50,9 +51,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Buttons for features that are not built yet just show a simple message.
-     * They will be wired to real screens (Add Trip, Trip list, Expense list)
-     * in later steps.
+     * "Add New Trip" now opens the real Add Trip screen. The other buttons depend on
+     * features not built yet (Trip listing, Expense listing), so they still just show
+     * a "coming soon" message.
      */
     private void setupActionButtons() {
         Button buttonAddTrip = findViewById(R.id.buttonAddTrip);
@@ -62,7 +63,8 @@ public class MainActivity extends AppCompatActivity {
         View.OnClickListener comingSoonListener = v ->
                 Toast.makeText(MainActivity.this, R.string.msg_feature_coming_soon, Toast.LENGTH_SHORT).show();
 
-        buttonAddTrip.setOnClickListener(comingSoonListener);
+        buttonAddTrip.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, AddTripActivity.class)));
         buttonMyTrips.setOnClickListener(comingSoonListener);
         buttonExpenses.setOnClickListener(comingSoonListener);
     }
