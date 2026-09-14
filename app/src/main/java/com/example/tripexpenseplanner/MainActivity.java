@@ -51,9 +51,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * "Add New Trip" now opens the real Add Trip screen. The other buttons depend on
-     * features not built yet (Trip listing, Expense listing), so they still just show
-     * a "coming soon" message.
+     * "Add New Trip" opens the Add Trip screen and "My Trips" opens the trip list.
+     * "Expenses" depends on a feature not built yet, so it still just shows a
+     * "coming soon" message.
      */
     private void setupActionButtons() {
         Button buttonAddTrip = findViewById(R.id.buttonAddTrip);
@@ -65,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
 
         buttonAddTrip.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, AddTripActivity.class)));
-        buttonMyTrips.setOnClickListener(comingSoonListener);
+        buttonMyTrips.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, MyTripsActivity.class)));
         buttonExpenses.setOnClickListener(comingSoonListener);
     }
 

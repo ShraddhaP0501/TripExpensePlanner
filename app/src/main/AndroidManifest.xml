@@ -23,6 +23,16 @@
             android:exported="false"
             android:label="@string/title_add_trip" />
 
+        <activity
+            android:name=".MyTripsActivity"
+            android:exported="false"
+            android:label="@string/title_my_trips" />
+
+        <activity
+            android:name=".TripDetailsActivity"
+            android:exported="false"
+            android:label="@string/title_trip_details" />
+
     </application>
 
 </manifest>

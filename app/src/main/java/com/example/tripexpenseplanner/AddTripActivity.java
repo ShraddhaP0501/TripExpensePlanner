@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,18 +22,24 @@ import java.util.Calendar;
 import java.util.Locale;
 
 /**
- * Screen for creating a new Trip.
- * Validates the input, then inserts one row into the "trips" table via DatabaseHelper.
- * Trip listing/editing is not implemented yet — this screen only creates trips.
+ * Screen for creating a new Trip, and also for editing an existing one.
+ * Pass {@link #EXTRA_TRIP_ID} in the launching Intent to open it in edit mode —
+ * without it, the screen behaves as "Add New Trip".
+ * Validates the input, then inserts/updates one row in the "trips" table via DatabaseHelper.
  */
 public class AddTripActivity extends AppCompatActivity {
 
+    public static final String EXTRA_TRIP_ID = "extra_trip_id";
     private static final String TAG = "AddTripActivity";
     private static final String DATE_PATTERN = "yyyy-MM-dd";
+    private static final long NO_TRIP_ID = -1L;
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN, Locale.US);
 
     private DatabaseHelper dbHelper;
+
+    /** -1 while creating a new trip; the real trip id while editing an existing one. */
+    private long editingTripId = NO_TRIP_ID;
 
     private TextInputLayout layoutTripName;
     private TextInputLayout layoutDestination;
@@ -44,12 +52,16 @@ public class AddTripActivity extends AppCompatActivity {
     private TextInputEditText editEndDate;
     private TextInputEditText editNotes;
 
+    private Button buttonSaveTrip;
+    private TextView textFormTitle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_trip);
 
         dbHelper = new DatabaseHelper(this);
+        editingTripId = getIntent().getLongExtra(EXTRA_TRIP_ID, NO_TRIP_ID);
 
         layoutTripName = findViewById(R.id.layoutTripName);
         layoutDestination = findViewById(R.id.layoutDestination);
@@ -61,12 +73,46 @@ public class AddTripActivity extends AppCompatActivity {
         editStartDate = findViewById(R.id.editStartDate);
         editEndDate = findViewById(R.id.editEndDate);
         editNotes = findViewById(R.id.editNotes);
+        buttonSaveTrip = findViewById(R.id.buttonSaveTrip);
+        textFormTitle = findViewById(R.id.textFormTitle);
 
         editStartDate.setOnClickListener(v -> showDatePicker(editStartDate, layoutStartDate));
         editEndDate.setOnClickListener(v -> showDatePicker(editEndDate, layoutEndDate));
 
         findViewById(R.id.buttonCancel).setOnClickListener(v -> finish());
-        findViewById(R.id.buttonSaveTrip).setOnClickListener(v -> validateAndSaveTrip());
+        buttonSaveTrip.setOnClickListener(v -> validateAndSaveTrip());
+
+        if (isEditMode()) {
+            setTitle(R.string.title_edit_trip);
+            textFormTitle.setText(R.string.title_edit_trip);
+            buttonSaveTrip.setText(R.string.label_update_trip);
+            prefillFieldsForEdit();
+        } else {
+            setTitle(R.string.title_add_trip);
+            textFormTitle.setText(R.string.title_add_trip);
+        }
+    }
+
+    private boolean isEditMode() {
+        return editingTripId != NO_TRIP_ID;
+    }
+
+    /**
+     * Loads the existing trip and fills the form with its current values.
+     */
+    private void prefillFieldsForEdit() {
+        Trip trip = dbHelper.getTrip(editingTripId);
+        if (trip == null) {
+            Toast.makeText(this, R.string.error_trip_not_found, Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
+        editTripName.setText(trip.getTripName());
+        editDestination.setText(trip.getDestination());
+        editStartDate.setText(trip.getStartDate());
+        editEndDate.setText(trip.getEndDate());
+        editNotes.setText(trip.getNotes());
     }
 
     /**
@@ -101,7 +147,7 @@ public class AddTripActivity extends AppCompatActivity {
     }
 
     /**
-     * Validates every required field, then inserts the trip into SQLite.
+     * Validates every required field, then inserts or updates the trip in SQLite.
      */
     private void validateAndSaveTrip() {
         layoutTripName.setError(null);
@@ -146,21 +192,33 @@ public class AddTripActivity extends AppCompatActivity {
 
         Trip trip = new Trip(tripName, destination, startDate, endDate,
                 TextUtils.isEmpty(notes) ? null : notes);
+        if (isEditMode()) {
+            trip.setId(editingTripId);
+        }
         saveTrip(trip);
     }
 
     /**
-     * Inserts the trip into the database and reports the result to the user.
+     * Inserts (or updates, in edit mode) the trip and reports the result to the user.
      */
     private void saveTrip(Trip trip) {
         try {
-            long newTripId = dbHelper.insertTrip(trip);
-            if (newTripId == -1) {
-                // db.insert() returns -1 if the row could not be inserted.
-                throw new SQLiteException("Insert returned -1 for trip: " + trip.getTripName());
+            if (isEditMode()) {
+                int rowsUpdated = dbHelper.updateTrip(trip);
+                if (rowsUpdated <= 0) {
+                    throw new SQLiteException("Update affected 0 rows for trip id: " + trip.getId());
+                }
+                Log.d(TAG, "Trip updated, id = " + trip.getId());
+                Toast.makeText(this, R.string.msg_trip_updated, Toast.LENGTH_SHORT).show();
+            } else {
+                long newTripId = dbHelper.insertTrip(trip);
+                if (newTripId == -1) {
+                    // db.insert() returns -1 if the row could not be inserted.
+                    throw new SQLiteException("Insert returned -1 for trip: " + trip.getTripName());
+                }
+                Log.d(TAG, "Trip saved with id = " + newTripId);
+                Toast.makeText(this, R.string.msg_trip_saved, Toast.LENGTH_SHORT).show();
             }
-            Log.d(TAG, "Trip saved with id = " + newTripId);
-            Toast.makeText(this, R.string.msg_trip_saved, Toast.LENGTH_SHORT).show();
             finish();
         } catch (SQLiteException e) {
             Log.e(TAG, "Error saving trip", e);

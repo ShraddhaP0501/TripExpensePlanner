@@ -30,4 +30,30 @@
     <string name="error_start_after_end">Start date cannot be after end date</string>
     <string name="msg_trip_saved">Trip saved successfully</string>
     <string name="error_saving_trip">Something went wrong while saving the trip. Please try again.</string>
+
+    <!-- My Trips screen -->
+    <string name="title_my_trips">My Trips</string>
+    <string name="msg_no_trips">No trips yet. Tap \"Add New Trip\" on the Dashboard to create one.</string>
+
+    <!-- Trip Details screen -->
+    <string name="title_trip_details">Trip Details</string>
+    <string name="label_destination">Destination</string>
+    <string name="label_start_date">Start Date</string>
+    <string name="label_end_date">End Date</string>
+    <string name="label_notes">Notes</string>
+    <string name="label_edit_trip">Edit Trip</string>
+    <string name="label_delete_trip">Delete Trip</string>
+    <string name="error_trip_not_found">This trip could not be found. It may have been deleted.</string>
+
+    <!-- Delete confirmation -->
+    <string name="dialog_delete_trip_title">Delete Trip</string>
+    <string name="dialog_delete_trip_message">Are you sure you want to delete this trip? This cannot be undone.</string>
+    <string name="label_delete">Delete</string>
+    <string name="msg_trip_deleted">Trip deleted</string>
+    <string name="error_deleting_trip">Something went wrong while deleting the trip. Please try again.</string>
+
+    <!-- Edit Trip (reuses the Add Trip screen) -->
+    <string name="title_edit_trip">Edit Trip</string>
+    <string name="label_update_trip">Update Trip</string>
+    <string name="msg_trip_updated">Trip updated successfully</string>
 </resources>
