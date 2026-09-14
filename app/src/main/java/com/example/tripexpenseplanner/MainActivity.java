@@ -48,6 +48,13 @@ public class MainActivity extends AppCompatActivity {
 
         setupActionButtons();
         setupUpcomingActivitiesList();
+        NavigationHelper.setup(this, R.id.navHome);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        NavigationHelper.resetSelection(this, R.id.navHome);
     }
 
     /**

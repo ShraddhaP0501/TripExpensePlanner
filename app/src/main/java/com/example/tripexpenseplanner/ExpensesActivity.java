@@ -68,6 +68,7 @@ public class ExpensesActivity extends AppCompatActivity implements ExpenseAdapte
         findViewById(R.id.buttonAddExpense).setOnClickListener(v -> openAddExpense());
 
         updateTitle();
+        NavigationHelper.setup(this, R.id.navExpenses);
     }
 
     @Override
@@ -77,6 +78,7 @@ public class ExpensesActivity extends AppCompatActivity implements ExpenseAdapte
         // added/edited/deleted via Add/Edit Expense are always reflected,
         // and the total stays accurate.
         loadExpenses();
+        NavigationHelper.resetSelection(this, R.id.navExpenses);
     }
 
     /**

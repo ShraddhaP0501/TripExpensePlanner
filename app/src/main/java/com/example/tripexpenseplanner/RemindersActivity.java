@@ -87,6 +87,7 @@ public class RemindersActivity extends AppCompatActivity implements ReminderAdap
 
         updateTitle();
         requestNotificationPermissionIfNeeded();
+        NavigationHelper.setup(this, R.id.navMyTrips);
     }
 
     @Override
@@ -95,6 +96,7 @@ public class RemindersActivity extends AppCompatActivity implements ReminderAdap
         // Reload every time this screen becomes visible again, so a reminder
         // added or cancelled elsewhere is always reflected.
         loadReminders();
+        NavigationHelper.resetSelection(this, R.id.navMyTrips);
     }
 
     private void updateTitle() {

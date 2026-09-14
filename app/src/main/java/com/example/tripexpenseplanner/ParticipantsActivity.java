@@ -65,6 +65,7 @@ public class ParticipantsActivity extends AppCompatActivity implements Participa
         findViewById(R.id.buttonAddParticipant).setOnClickListener(v -> openAddParticipant());
 
         updateTitle();
+        NavigationHelper.setup(this, R.id.navMyTrips);
     }
 
     @Override
@@ -73,6 +74,7 @@ public class ParticipantsActivity extends AppCompatActivity implements Participa
         // Reload every time this screen becomes visible again, so participants
         // added/edited/deleted via Add/Edit Participant are always reflected.
         loadParticipants();
+        NavigationHelper.resetSelection(this, R.id.navMyTrips);
     }
 
     /**

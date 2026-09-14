@@ -123,6 +123,7 @@ public class TripSummaryActivity extends AppCompatActivity {
         findViewById(R.id.buttonBack).setOnClickListener(v -> finish());
 
         updateTitle();
+        NavigationHelper.setup(this, R.id.navMyTrips);
     }
 
     @Override
@@ -131,6 +132,7 @@ public class TripSummaryActivity extends AppCompatActivity {
         // Recalculate every time this screen becomes visible, so it always reflects
         // the latest trip details, activities, expenses, splits, and participants.
         loadSummary();
+        NavigationHelper.resetSelection(this, R.id.navMyTrips);
     }
 
     private void updateTitle() {

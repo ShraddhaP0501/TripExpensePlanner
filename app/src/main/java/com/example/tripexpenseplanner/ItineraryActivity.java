@@ -65,6 +65,7 @@ public class ItineraryActivity extends AppCompatActivity implements TripActivity
         findViewById(R.id.buttonAddActivity).setOnClickListener(v -> openAddActivity());
 
         updateTitle();
+        NavigationHelper.setup(this, R.id.navMyTrips);
     }
 
     @Override
@@ -73,6 +74,7 @@ public class ItineraryActivity extends AppCompatActivity implements TripActivity
         // Reload every time this screen becomes visible again, so activities
         // added/edited/deleted via Add/Edit Activity are always reflected.
         loadActivities();
+        NavigationHelper.resetSelection(this, R.id.navMyTrips);
     }
 
     /**
