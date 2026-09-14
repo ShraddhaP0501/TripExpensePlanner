@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -26,6 +27,168 @@
             android:textSize="@dimen/text_size_title"
             android:textStyle="bold"
             tools:text="Trip Summary" />
+
+        <!-- Trip Overview: always shown, regardless of participants/expenses -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_medium"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardElevation="@dimen/card_elevation"
+            app:cardBackgroundColor="@color/cardBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/padding_medium">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_trip_overview"
+                    android:textColor="@color/textPrimary"
+                    android:textSize="@dimen/text_size_subtitle"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textOverviewTripName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_small"
+                    android:textColor="@color/textPrimary"
+                    android:textSize="14sp"
+                    tools:text="Trip Name: Goa Trip" />
+
+                <TextView
+                    android:id="@+id/textOverviewDestination"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/textPrimary"
+                    android:textSize="14sp"
+                    tools:text="Destination: Goa, India" />
+
+                <TextView
+                    android:id="@+id/textOverviewDates"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/textPrimary"
+                    android:textSize="14sp"
+                    tools:text="2026-10-10 to 2026-10-15" />
+
+                <TextView
+                    android:id="@+id/textOverviewDuration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/textPrimary"
+                    android:textSize="14sp"
+                    tools:text="Duration: 6 days" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Statistics: always shown, regardless of participants/expenses -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_medium"
+            android:layout_marginEnd="@dimen/padding_medium"
+            android:layout_marginBottom="@dimen/padding_medium"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardElevation="@dimen/card_elevation"
+            app:cardBackgroundColor="@color/cardBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/padding_medium">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_statistics"
+                    android:textColor="@color/textPrimary"
+                    android:textSize="@dimen/text_size_subtitle"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textActivityCount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_small"
+                    android:textColor="@color/textPrimary"
+                    android:textSize="14sp"
+                    tools:text="Activities: 3" />
+
+                <TextView
+                    android:id="@+id/textExpenseCount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/textPrimary"
+                    android:textSize="14sp"
+                    tools:text="Expenses: 5" />
+
+                <TextView
+                    android:id="@+id/textParticipantCount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/textPrimary"
+                    android:textSize="14sp"
+                    tools:text="Participants: 4" />
+
+                <TextView
+                    android:id="@+id/textOverviewTotalExpense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_small"
+                    android:textColor="@color/primary"
+                    android:textSize="@dimen/text_size_subtitle"
+                    android:textStyle="bold"
+                    tools:text="Total Expense: ₹2000.00" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Category-wise Expenses: always shown, regardless of participants -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_medium"
+            android:layout_marginEnd="@dimen/padding_medium"
+            android:layout_marginBottom="@dimen/padding_medium"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_category_totals"
+                android:textColor="@color/textPrimary"
+                android:textSize="@dimen/text_size_subtitle"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textNoCategoryTotals"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_small"
+                android:text="@string/msg_no_expenses"
+                android:textColor="@color/textSecondary"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/containerCategoryTotals"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_small"
+                android:orientation="vertical" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/textNoSummaryData"

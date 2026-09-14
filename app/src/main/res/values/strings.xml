@@ -159,6 +159,9 @@
 
     <!-- Trip Summary screen -->
     <string name="title_trip_summary">Trip Summary</string>
+    <string name="label_trip_overview">Trip Overview</string>
+    <string name="label_statistics">Statistics</string>
+    <string name="label_category_totals">Category-wise Expenses</string>
     <string name="label_balances">Balances</string>
     <string name="label_who_owes_whom">Who Owes Whom</string>
     <string name="label_paid_amount">Paid</string>
@@ -169,5 +172,16 @@
     <string name="msg_settled_up">Settled up</string>
     <string name="format_settlement">%1$s owes %2$s %3$s</string>
     <string name="msg_all_settled">Everyone is settled up!</string>
-    <string name="msg_no_summary_data">Add participants and expenses to this trip to see the summary.</string>
+    <string name="msg_no_summary_data">Add participants to see balances and who owes whom.</string>
+
+    <string name="format_trip_name">Trip Name: %1$s</string>
+    <string name="format_destination">Destination: %1$s</string>
+    <string name="format_date_range">%1$s to %2$s</string>
+    <string name="format_duration_days">Duration: %1$d day(s)</string>
+    <string name="msg_duration_unavailable">Duration: not available</string>
+    <string name="format_activity_count">Activities: %1$d</string>
+    <string name="format_expense_count">Expenses: %1$d</string>
+    <string name="format_participant_count">Participants: %1$d</string>
+    <string name="format_total_expense_label">Total Expense: %1$s</string>
+    <string name="format_category_amount">%1$s: %2$s</string>
 </resources>

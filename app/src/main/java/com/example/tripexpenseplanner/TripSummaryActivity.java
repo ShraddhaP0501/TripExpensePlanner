@@ -12,34 +12,67 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tripexpenseplanner.adapter.ParticipantBalanceAdapter;
 import com.example.tripexpenseplanner.database.DatabaseHelper;
+import com.example.tripexpenseplanner.model.CategoryTotal;
 import com.example.tripexpenseplanner.model.Expense;
 import com.example.tripexpenseplanner.model.ExpenseParticipant;
 import com.example.tripexpenseplanner.model.Participant;
 import com.example.tripexpenseplanner.model.ParticipantBalance;
 import com.example.tripexpenseplanner.model.SettlementEntry;
 import com.example.tripexpenseplanner.model.Trip;
+import com.example.tripexpenseplanner.model.TripActivity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
- * Shows, for one trip: how much each participant paid versus their share of
- * every expense, their overall balance, and a simplified "who owes whom" list
- * so the group can settle up. Everything here is calculated fresh from the
- * "expenses" and "expense_participants" tables each time the screen is shown —
- * nothing on this screen is stored on its own.
+ * Shows a complete read-only summary of one trip, built entirely from data
+ * already in SQLite — no external APIs are used:
+ *
+ * - Trip Overview: name, destination, start/end date, duration.
+ * - Statistics: number of activities, number of expenses, total expense,
+ *   number of participants.
+ * - Category-wise expense totals.
+ * - Balances (paid vs. share) and a simplified "who owes whom" settlement list.
+ *
+ * Everything is recalculated fresh from the "trips", "activities", "expenses",
+ * "expense_participants" and "participants" tables each time the screen is shown.
  */
 public class TripSummaryActivity extends AppCompatActivity {
 
     public static final String EXTRA_TRIP_ID = "extra_trip_id";
     private static final long NO_TRIP_ID = -1L;
+    private static final String DATE_PATTERN = "yyyy-MM-dd";
+
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN, Locale.US);
 
     private DatabaseHelper dbHelper;
     private long tripId = NO_TRIP_ID;
 
     private TextView textSummaryTitle;
+
+    // Trip Overview
+    private TextView textOverviewTripName;
+    private TextView textOverviewDestination;
+    private TextView textOverviewDates;
+    private TextView textOverviewDuration;
+
+    // Statistics
+    private TextView textActivityCount;
+    private TextView textExpenseCount;
+    private TextView textParticipantCount;
+    private TextView textOverviewTotalExpense;
+
+    // Category-wise expenses
+    private TextView textNoCategoryTotals;
+    private LinearLayout containerCategoryTotals;
+
+    // Balances / settlement
     private TextView textNoSummaryData;
     private LinearLayout containerSummaryContent;
     private RecyclerView recyclerBalances;
@@ -63,6 +96,20 @@ public class TripSummaryActivity extends AppCompatActivity {
         }
 
         textSummaryTitle = findViewById(R.id.textSummaryTitle);
+
+        textOverviewTripName = findViewById(R.id.textOverviewTripName);
+        textOverviewDestination = findViewById(R.id.textOverviewDestination);
+        textOverviewDates = findViewById(R.id.textOverviewDates);
+        textOverviewDuration = findViewById(R.id.textOverviewDuration);
+
+        textActivityCount = findViewById(R.id.textActivityCount);
+        textExpenseCount = findViewById(R.id.textExpenseCount);
+        textParticipantCount = findViewById(R.id.textParticipantCount);
+        textOverviewTotalExpense = findViewById(R.id.textOverviewTotalExpense);
+
+        textNoCategoryTotals = findViewById(R.id.textNoCategoryTotals);
+        containerCategoryTotals = findViewById(R.id.containerCategoryTotals);
+
         textNoSummaryData = findViewById(R.id.textNoSummaryData);
         containerSummaryContent = findViewById(R.id.containerSummaryContent);
         recyclerBalances = findViewById(R.id.recyclerBalances);
@@ -80,7 +127,7 @@ public class TripSummaryActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // Recalculate every time this screen becomes visible, so it always reflects
-        // the latest expenses, splits, and participants.
+        // the latest trip details, activities, expenses, splits, and participants.
         loadSummary();
     }
 
@@ -95,9 +142,103 @@ public class TripSummaryActivity extends AppCompatActivity {
     }
 
     private void loadSummary() {
-        List<ParticipantBalance> balances = computeBalances();
+        Trip trip = dbHelper.getTrip(tripId);
+        List<Participant> participants = dbHelper.getParticipantsByTrip(tripId);
+        List<TripActivity> activities = dbHelper.getActivitiesByTrip(tripId);
+        List<Expense> expenses = dbHelper.getExpensesByTrip(tripId);
+        double totalExpense = dbHelper.getTotalExpenseForTrip(tripId);
+        List<CategoryTotal> categoryTotals = dbHelper.getCategoryWiseExpenseTotals(tripId);
 
-        if (balances.isEmpty()) {
+        renderOverview(trip);
+        renderStatistics(activities.size(), expenses.size(), participants.size(), totalExpense);
+        renderCategoryTotals(categoryTotals);
+        renderBalancesAndSettlements(participants, expenses);
+    }
+
+    /**
+     * Trip Overview section: name, destination, date range and duration —
+     * all read straight from the "trips" table, no calculation involved except
+     * the day count.
+     */
+    private void renderOverview(Trip trip) {
+        if (trip == null) {
+            return;
+        }
+        textOverviewTripName.setText(getString(R.string.format_trip_name, trip.getTripName()));
+        textOverviewDestination.setText(getString(R.string.format_destination, trip.getDestination()));
+        textOverviewDates.setText(getString(R.string.format_date_range, trip.getStartDate(), trip.getEndDate()));
+
+        Integer durationDays = computeDurationInDays(trip.getStartDate(), trip.getEndDate());
+        if (durationDays != null) {
+            textOverviewDuration.setText(getString(R.string.format_duration_days, durationDays));
+        } else {
+            textOverviewDuration.setText(R.string.msg_duration_unavailable);
+        }
+    }
+
+    /**
+     * Trip duration in days, counting both the start day and the end day
+     * (e.g. 2026-10-10 to 2026-10-15 is 6 days). Returns null if either date
+     * can't be parsed, so the UI can show "not available" instead of crashing.
+     */
+    private Integer computeDurationInDays(String startDate, String endDate) {
+        try {
+            Date start = dateFormat.parse(startDate);
+            Date end = dateFormat.parse(endDate);
+            if (start == null || end == null) {
+                return null;
+            }
+            long diffMillis = end.getTime() - start.getTime();
+            long diffDays = diffMillis / (24L * 60 * 60 * 1000);
+            return (int) diffDays + 1;
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Statistics section: simple counts (activities, expenses, participants)
+     * plus the total expense already computed by DatabaseHelper's SUM() query.
+     */
+    private void renderStatistics(int activityCount, int expenseCount, int participantCount, double totalExpense) {
+        textActivityCount.setText(getString(R.string.format_activity_count, activityCount));
+        textExpenseCount.setText(getString(R.string.format_expense_count, expenseCount));
+        textParticipantCount.setText(getString(R.string.format_participant_count, participantCount));
+
+        String totalText = getString(R.string.format_amount, totalExpense);
+        textOverviewTotalExpense.setText(getString(R.string.format_total_expense_label, totalText));
+    }
+
+    /**
+     * Category-wise Expenses section: one line per category, from a SQL
+     * GROUP BY + SUM() query (DatabaseHelper.getCategoryWiseExpenseTotals).
+     */
+    private void renderCategoryTotals(List<CategoryTotal> categoryTotals) {
+        containerCategoryTotals.removeAllViews();
+
+        if (categoryTotals.isEmpty()) {
+            textNoCategoryTotals.setVisibility(View.VISIBLE);
+            return;
+        }
+        textNoCategoryTotals.setVisibility(View.GONE);
+
+        for (CategoryTotal categoryTotal : categoryTotals) {
+            TextView line = new TextView(this);
+            String amountText = getString(R.string.format_amount, categoryTotal.getTotalAmount());
+            line.setText(getString(R.string.format_category_amount, categoryTotal.getCategory(), amountText));
+            line.setTextColor(getColor(R.color.textPrimary));
+            line.setTextSize(15f);
+            line.setPadding(0, 0, 0, dpToPx(6));
+            containerCategoryTotals.addView(line);
+        }
+    }
+
+    /**
+     * Balances + Who Owes Whom section: needs at least one participant to mean
+     * anything, so it shows its own message when the trip has none yet.
+     */
+    private void renderBalancesAndSettlements(List<Participant> participants, List<Expense> expenses) {
+        if (participants.isEmpty()) {
             textNoSummaryData.setVisibility(View.VISIBLE);
             containerSummaryContent.setVisibility(View.GONE);
             return;
@@ -105,6 +246,7 @@ public class TripSummaryActivity extends AppCompatActivity {
         textNoSummaryData.setVisibility(View.GONE);
         containerSummaryContent.setVisibility(View.VISIBLE);
 
+        List<ParticipantBalance> balances = computeBalances(participants, expenses);
         balanceAdapter.setBalances(balances);
 
         List<SettlementEntry> settlements = computeSettlements(balances);
@@ -121,10 +263,7 @@ public class TripSummaryActivity extends AppCompatActivity {
      * multiple of one paisa/cent — only the final totals are converted back to
      * rupees (double) for display.
      */
-    private List<ParticipantBalance> computeBalances() {
-        List<Participant> participants = dbHelper.getParticipantsByTrip(tripId);
-        List<Expense> expenses = dbHelper.getExpensesByTrip(tripId);
-
+    private List<ParticipantBalance> computeBalances(List<Participant> participants, List<Expense> expenses) {
         Map<Long, Long> totalPaidCents = new HashMap<>();
         Map<Long, Long> totalShareCents = new HashMap<>();
         Map<String, Long> participantIdByName = new HashMap<>();

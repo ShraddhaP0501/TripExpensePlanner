@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.tripexpenseplanner.model.CategoryTotal;
 import com.example.tripexpenseplanner.model.Expense;
 import com.example.tripexpenseplanner.model.ExpenseParticipant;
 import com.example.tripexpenseplanner.model.Participant;
@@ -371,6 +372,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         }
         return total;
+    }
+
+    /**
+     * Groups every expense for one trip by its category and sums each group's amount,
+     * using SQLite's own GROUP BY + SUM() rather than grouping the rows in Java.
+     * Categories with no expenses are simply absent from the result.
+     */
+    public List<CategoryTotal> getCategoryWiseExpenseTotals(long tripId) {
+        List<CategoryTotal> totals = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        String query = "SELECT " + COLUMN_EXPENSE_CATEGORY + ", SUM(" + COLUMN_EXPENSE_AMOUNT + ") " +
+                "FROM " + TABLE_EXPENSES +
+                " WHERE " + COLUMN_EXPENSE_TRIP_ID + " = ?" +
+                " GROUP BY " + COLUMN_EXPENSE_CATEGORY +
+                " ORDER BY SUM(" + COLUMN_EXPENSE_AMOUNT + ") DESC";
+        try (Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(tripId)})) {
+            while (cursor.moveToNext()) {
+                String category = cursor.getString(0);
+                double total = cursor.getDouble(1);
+                totals.add(new CategoryTotal(category, total));
+            }
+        }
+        return totals;
     }
 
     // =========================================================================================
