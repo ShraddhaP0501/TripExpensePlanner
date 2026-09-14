@@ -355,6 +355,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return expense;
     }
 
+    /**
+     * Sums the amount column across every expense for one trip, using SQLite's
+     * own SUM() aggregate rather than adding the rows up in Java.
+     * Returns 0 when the trip has no expenses yet (SUM() of no rows is NULL in SQL).
+     */
+    public double getTotalExpenseForTrip(long tripId) {
+        SQLiteDatabase db = getReadableDatabase();
+        String query = "SELECT SUM(" + COLUMN_EXPENSE_AMOUNT + ") FROM " + TABLE_EXPENSES +
+                " WHERE " + COLUMN_EXPENSE_TRIP_ID + " = ?";
+        double total = 0;
+        try (Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(tripId)})) {
+            if (cursor.moveToFirst() && !cursor.isNull(0)) {
+                total = cursor.getDouble(0);
+            }
+        }
+        return total;
+    }
+
     // =========================================================================================
     // PARTICIPANTS
     // =========================================================================================

@@ -46,6 +46,15 @@
             android:name=".AddEditActivityActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ExpensesActivity"
+            android:exported="false"
+            android:label="@string/label_trip_expenses" />
+
+        <activity
+            android:name=".AddEditExpenseActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

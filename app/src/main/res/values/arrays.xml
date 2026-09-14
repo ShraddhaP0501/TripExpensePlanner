@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- First entry is a non-selectable placeholder used to make the Category
+         field's "required" validation meaningful (Spinner always has some
+         selection, so a real placeholder is needed to detect "not chosen yet"). -->
+    <string-array name="expense_categories">
+        <item>Select Category</item>
+        <item>Food</item>
+        <item>Transportation</item>
+        <item>Accommodation</item>
+        <item>Shopping</item>
+        <item>Activities</item>
+        <item>Other</item>
+    </string-array>
+</resources>

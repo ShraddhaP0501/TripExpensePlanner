@@ -94,4 +94,38 @@
     <string name="msg_activity_updated">Activity updated successfully</string>
     <string name="error_saving_activity">Something went wrong while saving the activity. Please try again.</string>
     <string name="error_activity_not_found">This activity could not be found. It may have been deleted.</string>
+
+    <!-- Expenses list screen -->
+    <string name="title_expenses">Expenses</string>
+    <string name="label_add_expense">+ Add Expense</string>
+    <string name="label_total_expense">Total Expense</string>
+    <string name="msg_no_expenses">No expenses yet. Tap \"Add Expense\" to record one.</string>
+    <string name="msg_expense_deleted">Expense deleted</string>
+    <string name="error_deleting_expense">Something went wrong while deleting the expense. Please try again.</string>
+    <string name="dialog_delete_expense_title">Delete Expense</string>
+    <string name="dialog_delete_expense_message">Are you sure you want to delete this expense? This cannot be undone.</string>
+    <string name="format_amount">₹%1$.2f</string>
+    <string name="format_paid_by">Paid by %1$s</string>
+
+    <!-- Add / Edit Expense screen -->
+    <string name="title_add_expense">Add Expense</string>
+    <string name="title_edit_expense">Edit Expense</string>
+    <string name="hint_category">Category</string>
+    <string name="hint_amount">Amount</string>
+    <string name="hint_paid_by">Paid By</string>
+    <string name="hint_expense_description">Description (optional)</string>
+    <string name="hint_expense_date">Expense Date</string>
+    <string name="label_save_expense">Save Expense</string>
+    <string name="label_update_expense">Update Expense</string>
+
+    <string name="error_category_required">Please select a category</string>
+    <string name="error_amount_required">Amount is required</string>
+    <string name="error_amount_invalid">Please enter a valid amount</string>
+    <string name="error_amount_must_be_positive">Amount must be greater than 0</string>
+    <string name="error_paid_by_required">Paid By is required</string>
+    <string name="error_expense_date_required">Expense date is required</string>
+    <string name="msg_expense_saved">Expense saved successfully</string>
+    <string name="msg_expense_updated">Expense updated successfully</string>
+    <string name="error_saving_expense">Something went wrong while saving the expense. Please try again.</string>
+    <string name="error_expense_not_found">This expense could not be found. It may have been deleted.</string>
 </resources>
