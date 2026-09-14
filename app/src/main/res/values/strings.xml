@@ -4,6 +4,12 @@
     <string name="welcome_message">Trip Expense and Planner</string>
     <string name="content_desc_back">Back</string>
 
+    <!-- Dashboard bottom navigation -->
+    <string name="nav_label_home">Home</string>
+    <string name="nav_label_trips">Trips</string>
+    <string name="nav_label_add_trip">Add Trip</string>
+    <string name="nav_label_expenses">Expenses</string>
+
     <!-- Dashboard -->
     <string name="label_add_new_trip">+ Add New Trip</string>
     <string name="label_my_trips">My Trips</string>

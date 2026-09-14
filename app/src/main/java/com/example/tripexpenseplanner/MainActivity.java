@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.tripexpenseplanner.adapter.UpcomingActivityAdapter;
 import com.example.tripexpenseplanner.database.DatabaseHelper;
 import com.example.tripexpenseplanner.model.TripActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Collections;
 import java.util.List;
@@ -48,6 +49,44 @@ public class MainActivity extends AppCompatActivity {
 
         setupActionButtons();
         setupUpcomingActivitiesList();
+        setupBottomNavigation();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Whenever the Dashboard becomes visible again (e.g. returning via the
+        // system back button), make sure "Home" is the one shown as selected.
+        BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
+        bottomNavigation.setSelectedItemId(R.id.navHome);
+    }
+
+    /**
+     * Wires the bottom navigation bar. "Home" is this screen, so it's a no-op;
+     * "Trips" and "Add Trip" mirror the Dashboard's own buttons; "Expenses" has
+     * no trip-independent destination yet, so it still shows a "coming soon"
+     * message, same as the Dashboard's own Expenses button.
+     */
+    private void setupBottomNavigation() {
+        BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
+        bottomNavigation.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.navHome) {
+                return true;
+            } else if (itemId == R.id.navMyTrips) {
+                startActivity(new Intent(MainActivity.this, MyTripsActivity.class));
+                return true;
+            } else if (itemId == R.id.navAddTrip) {
+                startActivity(new Intent(MainActivity.this, AddTripActivity.class));
+                return true;
+            } else if (itemId == R.id.navExpenses) {
+                Toast.makeText(this, R.string.msg_feature_coming_soon, Toast.LENGTH_SHORT).show();
+                // Returning false keeps "Home" highlighted instead of this tab —
+                // there's no standalone Expenses screen to switch to yet.
+                return false;
+            }
+            return false;
+        });
     }
 
     /**
