@@ -461,6 +461,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(expenseParticipantId)});
     }
 
+    /**
+     * Deletes every split (expense_participants row) recorded for one expense.
+     * Used before re-saving an edited expense's splits from scratch, and before
+     * deleting the expense itself — the "expense_id" foreign key means an expense
+     * with splits still pointing at it cannot be deleted otherwise.
+     */
+    public int deleteExpenseParticipantsByExpense(long expenseId) {
+        SQLiteDatabase db = getWritableDatabase();
+        return db.delete(TABLE_EXPENSE_PARTICIPANTS, COLUMN_EP_EXPENSE_ID + " = ?",
+                new String[]{String.valueOf(expenseId)});
+    }
+
+    /**
+     * Deletes every split (expense_participants row) that involves one participant.
+     * Used before deleting the participant itself — the "participant_id" foreign
+     * key means a participant who is still part of a split cannot be deleted otherwise.
+     * Note: this simply removes that participant's share from any expense they were
+     * part of; it does not redistribute the amount among the remaining participants.
+     */
+    public int deleteExpenseParticipantsByParticipant(long participantId) {
+        SQLiteDatabase db = getWritableDatabase();
+        return db.delete(TABLE_EXPENSE_PARTICIPANTS, COLUMN_EP_PARTICIPANT_ID + " = ?",
+                new String[]{String.valueOf(participantId)});
+    }
+
     public List<ExpenseParticipant> getExpenseParticipantsByExpense(long expenseId) {
         List<ExpenseParticipant> list = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();

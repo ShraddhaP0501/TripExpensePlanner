@@ -122,6 +122,10 @@ public class ParticipantsActivity extends AppCompatActivity implements Participa
 
     private void deleteParticipant(Participant participant) {
         try {
+            // Splits reference this participant via a foreign key — they must go
+            // first, otherwise SQLite refuses to delete a participant still part
+            // of an expense split. Their share of those expenses is simply removed.
+            dbHelper.deleteExpenseParticipantsByParticipant(participant.getId());
             int rowsDeleted = dbHelper.deleteParticipant(participant.getId());
             if (rowsDeleted > 0) {
                 Toast.makeText(this, R.string.msg_participant_deleted, Toast.LENGTH_SHORT).show();

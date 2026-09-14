@@ -122,12 +122,18 @@
     <string name="error_amount_required">Amount is required</string>
     <string name="error_amount_invalid">Please enter a valid amount</string>
     <string name="error_amount_must_be_positive">Amount must be greater than 0</string>
-    <string name="error_paid_by_required">Paid By is required</string>
+    <string name="error_paid_by_required">Please select who paid</string>
     <string name="error_expense_date_required">Expense date is required</string>
     <string name="msg_expense_saved">Expense saved successfully</string>
     <string name="msg_expense_updated">Expense updated successfully</string>
     <string name="error_saving_expense">Something went wrong while saving the expense. Please try again.</string>
     <string name="error_expense_not_found">This expense could not be found. It may have been deleted.</string>
+
+    <!-- Expense splitting -->
+    <string name="label_split_among">Split Among</string>
+    <string name="placeholder_select_payer">Select Payer</string>
+    <string name="error_split_participants_required">Please select at least one participant to split the expense</string>
+    <string name="msg_no_participants_for_split">This trip has no participants yet. Add participants first so this expense can be split.</string>
 
     <!-- Participants list screen -->
     <string name="title_participants">Participants</string>
@@ -150,4 +156,18 @@
     <string name="msg_participant_updated">Participant updated successfully</string>
     <string name="error_saving_participant">Something went wrong while saving the participant. Please try again.</string>
     <string name="error_participant_not_found">This participant could not be found. It may have been deleted.</string>
+
+    <!-- Trip Summary screen -->
+    <string name="title_trip_summary">Trip Summary</string>
+    <string name="label_balances">Balances</string>
+    <string name="label_who_owes_whom">Who Owes Whom</string>
+    <string name="label_paid_amount">Paid</string>
+    <string name="label_share_amount">Share</string>
+    <string name="label_balance">Balance</string>
+    <string name="format_gets_back">Gets back %1$s</string>
+    <string name="format_owes_amount">Owes %1$s</string>
+    <string name="msg_settled_up">Settled up</string>
+    <string name="format_settlement">%1$s owes %2$s %3$s</string>
+    <string name="msg_all_settled">Everyone is settled up!</string>
+    <string name="msg_no_summary_data">Add participants and expenses to this trip to see the summary.</string>
 </resources>

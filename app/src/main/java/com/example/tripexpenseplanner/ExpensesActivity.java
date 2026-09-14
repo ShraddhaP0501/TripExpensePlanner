@@ -23,7 +23,8 @@ import java.util.List;
 /**
  * Lists every expense that belongs to one trip, and shows their total.
  * Lets the user add, edit, and delete expenses for that trip.
- * Group/participant splitting is not implemented here yet.
+ * Each expense's payer and equal split among participants is set up in
+ * AddEditExpenseActivity; the resulting balances are shown on Trip Summary.
  */
 public class ExpensesActivity extends AppCompatActivity implements ExpenseAdapter.OnExpenseActionListener {
 
@@ -128,6 +129,9 @@ public class ExpensesActivity extends AppCompatActivity implements ExpenseAdapte
 
     private void deleteExpense(Expense expense) {
         try {
+            // Splits reference this expense via a foreign key — they must go first,
+            // otherwise SQLite refuses to delete the expense they still point to.
+            dbHelper.deleteExpenseParticipantsByExpense(expense.getId());
             int rowsDeleted = dbHelper.deleteExpense(expense.getId());
             if (rowsDeleted > 0) {
                 Toast.makeText(this, R.string.msg_expense_deleted, Toast.LENGTH_SHORT).show();

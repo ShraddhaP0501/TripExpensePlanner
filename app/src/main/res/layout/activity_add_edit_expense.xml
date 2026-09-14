@@ -75,21 +75,58 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layoutPaidBy"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/labelPaidBy"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_medium"
-                android:hint="@string/hint_paid_by">
+                android:text="@string/hint_paid_by"
+                android:textColor="@color/textSecondary"
+                android:textSize="14sp" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editPaidBy"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textCapWords" />
+            <Spinner
+                android:id="@+id/spinnerPaidBy"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginTop="4dp"
+                android:background="@color/cardBackground"
+                android:padding="@dimen/padding_small" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:id="@+id/textErrorPaidBy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#C62828"
+                android:textSize="12sp"
+                android:visibility="gone"
+                tools:text="Please select who paid"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/labelSplitAmong"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_medium"
+                android:text="@string/label_split_among"
+                android:textColor="@color/textSecondary"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:id="@+id/containerSplitParticipants"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="vertical" />
+
+            <TextView
+                android:id="@+id/textErrorSplitParticipants"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#C62828"
+                android:textSize="12sp"
+                android:visibility="gone"
+                tools:text="Please select at least one participant"
+                tools:visibility="visible" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layoutExpenseDate"

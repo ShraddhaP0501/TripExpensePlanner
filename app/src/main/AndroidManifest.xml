@@ -64,6 +64,11 @@
             android:name=".AddEditParticipantActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".TripSummaryActivity"
+            android:exported="false"
+            android:label="@string/label_trip_summary" />
+
     </application>
 
 </manifest>
