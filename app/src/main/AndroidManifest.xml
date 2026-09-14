@@ -33,6 +33,10 @@
             android:exported="false"
             android:label="@string/title_trip_details" />
 
+        <activity
+            android:name=".PlaceholderActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

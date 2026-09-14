@@ -56,4 +56,15 @@
     <string name="title_edit_trip">Edit Trip</string>
     <string name="label_update_trip">Update Trip</string>
     <string name="msg_trip_updated">Trip updated successfully</string>
+
+    <!-- Trip Details: section buttons (placeholder screens for now) -->
+    <string name="label_trip_sections">Trip Sections</string>
+    <string name="label_itinerary">Itinerary</string>
+    <string name="label_trip_expenses">Expenses</string>
+    <string name="label_participants">Participants</string>
+    <string name="label_trip_summary">Trip Summary</string>
+
+    <!-- Placeholder screen -->
+    <string name="msg_placeholder_screen">This feature is coming soon for this trip.</string>
+    <string name="format_trip_id">Trip ID: %1$d</string>
 </resources>

@@ -16,8 +16,9 @@ import com.example.tripexpenseplanner.database.DatabaseHelper;
 import com.example.tripexpenseplanner.model.Trip;
 
 /**
- * Shows full details for one trip and lets the user Edit or Delete it.
- * Itinerary and expenses for the trip are not shown here yet.
+ * Shows full details for one trip and lets the user Edit or Delete it, and
+ * navigate to its Itinerary, Expenses, Participants and Trip Summary sections.
+ * Those sections are not implemented yet — they open a placeholder screen for now.
  */
 public class TripDetailsActivity extends AppCompatActivity {
 
@@ -52,6 +53,15 @@ public class TripDetailsActivity extends AppCompatActivity {
 
         findViewById(R.id.buttonEditTrip).setOnClickListener(v -> openEditTrip());
         findViewById(R.id.buttonDeleteTrip).setOnClickListener(v -> confirmDeleteTrip());
+
+        findViewById(R.id.buttonItinerary).setOnClickListener(
+                v -> openPlaceholder(getString(R.string.label_itinerary)));
+        findViewById(R.id.buttonExpenses).setOnClickListener(
+                v -> openPlaceholder(getString(R.string.label_trip_expenses)));
+        findViewById(R.id.buttonParticipants).setOnClickListener(
+                v -> openPlaceholder(getString(R.string.label_participants)));
+        findViewById(R.id.buttonTripSummary).setOnClickListener(
+                v -> openPlaceholder(getString(R.string.label_trip_summary)));
 
         if (tripId == NO_TRIP_ID) {
             Toast.makeText(this, R.string.error_trip_not_found, Toast.LENGTH_LONG).show();
@@ -91,6 +101,17 @@ public class TripDetailsActivity extends AppCompatActivity {
     private void openEditTrip() {
         Intent intent = new Intent(this, AddTripActivity.class);
         intent.putExtra(AddTripActivity.EXTRA_TRIP_ID, tripId);
+        startActivity(intent);
+    }
+
+    /**
+     * Opens the shared "coming soon" screen for a trip section (Itinerary, Expenses,
+     * Participants, Trip Summary), carrying this trip's id along with it.
+     */
+    private void openPlaceholder(String screenTitle) {
+        Intent intent = new Intent(this, PlaceholderActivity.class);
+        intent.putExtra(PlaceholderActivity.EXTRA_TRIP_ID, tripId);
+        intent.putExtra(PlaceholderActivity.EXTRA_SCREEN_TITLE, screenTitle);
         startActivity(intent);
     }
 
