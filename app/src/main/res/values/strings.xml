@@ -128,4 +128,26 @@
     <string name="msg_expense_updated">Expense updated successfully</string>
     <string name="error_saving_expense">Something went wrong while saving the expense. Please try again.</string>
     <string name="error_expense_not_found">This expense could not be found. It may have been deleted.</string>
+
+    <!-- Participants list screen -->
+    <string name="title_participants">Participants</string>
+    <string name="label_add_participant">+ Add Participant</string>
+    <string name="msg_no_participants">No participants yet. Tap \"Add Participant\" to add one.</string>
+    <string name="msg_participant_deleted">Participant deleted</string>
+    <string name="error_deleting_participant">Something went wrong while deleting the participant. Please try again.</string>
+    <string name="dialog_delete_participant_title">Delete Participant</string>
+    <string name="dialog_delete_participant_message">Are you sure you want to remove this participant? This cannot be undone.</string>
+
+    <!-- Add / Edit Participant screen -->
+    <string name="title_add_participant">Add Participant</string>
+    <string name="title_edit_participant">Edit Participant</string>
+    <string name="hint_participant_name">Participant Name</string>
+    <string name="label_save_participant">Save Participant</string>
+    <string name="label_update_participant">Update Participant</string>
+
+    <string name="error_participant_name_required">Participant name is required</string>
+    <string name="msg_participant_saved">Participant saved successfully</string>
+    <string name="msg_participant_updated">Participant updated successfully</string>
+    <string name="error_saving_participant">Something went wrong while saving the participant. Please try again.</string>
+    <string name="error_participant_not_found">This participant could not be found. It may have been deleted.</string>
 </resources>

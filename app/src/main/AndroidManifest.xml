@@ -55,6 +55,15 @@
             android:name=".AddEditExpenseActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ParticipantsActivity"
+            android:exported="false"
+            android:label="@string/label_participants" />
+
+        <activity
+            android:name=".AddEditParticipantActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

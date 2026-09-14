@@ -18,8 +18,8 @@ import com.example.tripexpenseplanner.model.Trip;
 /**
  * Shows full details for one trip and lets the user Edit or Delete it, and
  * navigate to its Itinerary, Expenses, Participants and Trip Summary sections.
- * Itinerary and Expenses are implemented; Participants and Trip Summary still
- * open a placeholder screen for now.
+ * Itinerary, Expenses and Participants are implemented; Trip Summary still
+ * opens a placeholder screen for now.
  */
 public class TripDetailsActivity extends AppCompatActivity {
 
@@ -57,8 +57,7 @@ public class TripDetailsActivity extends AppCompatActivity {
 
         findViewById(R.id.buttonItinerary).setOnClickListener(v -> openItinerary());
         findViewById(R.id.buttonExpenses).setOnClickListener(v -> openExpenses());
-        findViewById(R.id.buttonParticipants).setOnClickListener(
-                v -> openPlaceholder(getString(R.string.label_participants)));
+        findViewById(R.id.buttonParticipants).setOnClickListener(v -> openParticipants());
         findViewById(R.id.buttonTripSummary).setOnClickListener(
                 v -> openPlaceholder(getString(R.string.label_trip_summary)));
 
@@ -115,9 +114,15 @@ public class TripDetailsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void openParticipants() {
+        Intent intent = new Intent(this, ParticipantsActivity.class);
+        intent.putExtra(ParticipantsActivity.EXTRA_TRIP_ID, tripId);
+        startActivity(intent);
+    }
+
     /**
      * Opens the shared "coming soon" screen for a trip section not built yet
-     * (Participants, Trip Summary), carrying this trip's id along with it.
+     * (Trip Summary), carrying this trip's id along with it.
      */
     private void openPlaceholder(String screenTitle) {
         Intent intent = new Intent(this, PlaceholderActivity.class);
