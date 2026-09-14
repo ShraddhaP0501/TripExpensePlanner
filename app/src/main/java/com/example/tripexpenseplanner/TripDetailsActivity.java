@@ -18,7 +18,8 @@ import com.example.tripexpenseplanner.model.Trip;
 /**
  * Shows full details for one trip and lets the user Edit or Delete it, and
  * navigate to its Itinerary, Expenses, Participants and Trip Summary sections.
- * Those sections are not implemented yet — they open a placeholder screen for now.
+ * Itinerary is implemented; Expenses, Participants and Trip Summary still open
+ * a placeholder screen for now.
  */
 public class TripDetailsActivity extends AppCompatActivity {
 
@@ -54,8 +55,7 @@ public class TripDetailsActivity extends AppCompatActivity {
         findViewById(R.id.buttonEditTrip).setOnClickListener(v -> openEditTrip());
         findViewById(R.id.buttonDeleteTrip).setOnClickListener(v -> confirmDeleteTrip());
 
-        findViewById(R.id.buttonItinerary).setOnClickListener(
-                v -> openPlaceholder(getString(R.string.label_itinerary)));
+        findViewById(R.id.buttonItinerary).setOnClickListener(v -> openItinerary());
         findViewById(R.id.buttonExpenses).setOnClickListener(
                 v -> openPlaceholder(getString(R.string.label_trip_expenses)));
         findViewById(R.id.buttonParticipants).setOnClickListener(
@@ -104,9 +104,15 @@ public class TripDetailsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void openItinerary() {
+        Intent intent = new Intent(this, ItineraryActivity.class);
+        intent.putExtra(ItineraryActivity.EXTRA_TRIP_ID, tripId);
+        startActivity(intent);
+    }
+
     /**
-     * Opens the shared "coming soon" screen for a trip section (Itinerary, Expenses,
-     * Participants, Trip Summary), carrying this trip's id along with it.
+     * Opens the shared "coming soon" screen for a trip section not built yet
+     * (Expenses, Participants, Trip Summary), carrying this trip's id along with it.
      */
     private void openPlaceholder(String screenTitle) {
         Intent intent = new Intent(this, PlaceholderActivity.class);

@@ -37,6 +37,15 @@
             android:name=".PlaceholderActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ItineraryActivity"
+            android:exported="false"
+            android:label="@string/label_itinerary" />
+
+        <activity
+            android:name=".AddEditActivityActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

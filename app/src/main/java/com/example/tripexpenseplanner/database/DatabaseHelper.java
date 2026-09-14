@@ -263,8 +263,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<TripActivity> getActivitiesByTrip(long tripId) {
         List<TripActivity> activities = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
+        // Order by date first, then time, so the itinerary reads chronologically.
+        String orderBy = COLUMN_ACTIVITY_DATE + " ASC, " + COLUMN_ACTIVITY_TIME + " ASC";
         try (Cursor cursor = db.query(TABLE_ACTIVITIES, null, COLUMN_ACTIVITY_TRIP_ID + " = ?",
-                new String[]{String.valueOf(tripId)}, null, null, COLUMN_ACTIVITY_DATE + " ASC")) {
+                new String[]{String.valueOf(tripId)}, null, null, orderBy)) {
             while (cursor.moveToNext()) {
                 activities.add(cursorToActivity(cursor));
             }
