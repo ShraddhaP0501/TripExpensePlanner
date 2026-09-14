@@ -42,6 +42,7 @@ public class MyTripsActivity extends AppCompatActivity implements TripAdapter.On
         recyclerTrips.setAdapter(tripAdapter);
 
         findViewById(R.id.buttonBack).setOnClickListener(v -> finish());
+        NavigationHelper.setup(this, R.id.navMyTrips);
     }
 
     @Override
@@ -50,6 +51,7 @@ public class MyTripsActivity extends AppCompatActivity implements TripAdapter.On
         // Reload every time this screen becomes visible again, so a trip added,
         // edited or deleted elsewhere (Add Trip / Trip Details) is always reflected.
         loadTrips();
+        NavigationHelper.resetSelection(this, R.id.navMyTrips);
     }
 
     private void loadTrips() {

@@ -142,6 +142,14 @@ public class AddEditExpenseActivity extends AppCompatActivity {
             // New expense: default to splitting equally among everyone, including the payer.
             buildSplitChecklist(new HashSet<>(participantIds(tripParticipants)));
         }
+
+        NavigationHelper.setup(this, R.id.navMyTrips);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        NavigationHelper.resetSelection(this, R.id.navMyTrips);
     }
 
     private boolean isEditMode() {

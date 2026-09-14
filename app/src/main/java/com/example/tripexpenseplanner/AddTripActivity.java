@@ -92,6 +92,14 @@ public class AddTripActivity extends AppCompatActivity {
             setTitle(R.string.title_add_trip);
             textFormTitle.setText(R.string.title_add_trip);
         }
+
+        NavigationHelper.setup(this, R.id.navAddTrip);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        NavigationHelper.resetSelection(this, R.id.navAddTrip);
     }
 
     private boolean isEditMode() {

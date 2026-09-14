@@ -64,6 +64,8 @@ public class TripDetailsActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.error_trip_not_found, Toast.LENGTH_LONG).show();
             finish();
         }
+
+        NavigationHelper.setup(this, R.id.navMyTrips);
     }
 
     @Override
@@ -73,6 +75,7 @@ public class TripDetailsActivity extends AppCompatActivity {
             // Reload every time, so returning from Edit Trip shows the latest values.
             loadTripDetails();
         }
+        NavigationHelper.resetSelection(this, R.id.navMyTrips);
     }
 
     private void loadTripDetails() {

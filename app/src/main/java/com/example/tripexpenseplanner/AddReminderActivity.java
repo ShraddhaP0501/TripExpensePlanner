@@ -89,6 +89,14 @@ public class AddReminderActivity extends AppCompatActivity {
         findViewById(R.id.buttonBack).setOnClickListener(v -> finish());
         findViewById(R.id.buttonCancelAddReminder).setOnClickListener(v -> finish());
         findViewById(R.id.buttonSaveReminder).setOnClickListener(v -> validateAndSaveReminder());
+
+        NavigationHelper.setup(this, R.id.navMyTrips);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        NavigationHelper.resetSelection(this, R.id.navMyTrips);
     }
 
     private void showDatePicker() {

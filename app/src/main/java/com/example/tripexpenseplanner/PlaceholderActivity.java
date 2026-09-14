@@ -34,5 +34,12 @@ public class PlaceholderActivity extends AppCompatActivity {
         textTripId.setText(getString(R.string.format_trip_id, tripId));
 
         findViewById(R.id.buttonBack).setOnClickListener(v -> finish());
+        NavigationHelper.setup(this, R.id.navMyTrips);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        NavigationHelper.resetSelection(this, R.id.navMyTrips);
     }
 }

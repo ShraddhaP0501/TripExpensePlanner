@@ -98,6 +98,14 @@ public class AddEditActivityActivity extends AppCompatActivity {
             setTitle(R.string.title_add_activity);
             textFormTitle.setText(R.string.title_add_activity);
         }
+
+        NavigationHelper.setup(this, R.id.navMyTrips);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        NavigationHelper.resetSelection(this, R.id.navMyTrips);
     }
 
     private boolean isEditMode() {
