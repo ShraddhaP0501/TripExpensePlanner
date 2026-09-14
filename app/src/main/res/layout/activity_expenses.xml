@@ -8,20 +8,38 @@
     android:orientation="vertical"
     tools:context=".ExpensesActivity">
 
-    <TextView
-        android:id="@+id/textExpensesTitle"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/primary"
-        android:gravity="center"
-        android:paddingStart="@dimen/padding_medium"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/padding_small"
         android:paddingTop="@dimen/padding_large"
         android:paddingEnd="@dimen/padding_medium"
-        android:paddingBottom="@dimen/padding_large"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size_title"
-        android:textStyle="bold"
-        tools:text="Expenses" />
+        android:paddingBottom="@dimen/padding_large">
+
+        <ImageButton
+            android:id="@+id/buttonBack"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/content_desc_back"
+            android:padding="@dimen/padding_small"
+            android:src="@drawable/ic_back_arrow" />
+
+        <TextView
+            android:id="@+id/textExpensesTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingEnd="@dimen/touch_target_min"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_title"
+            android:textStyle="bold"
+            tools:text="Expenses" />
+
+    </LinearLayout>
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
@@ -48,7 +66,7 @@
                 android:id="@+id/textTotalExpense"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/padding_tiny"
                 android:textColor="@color/primary"
                 android:textSize="@dimen/text_size_amount"
                 android:textStyle="bold"
@@ -80,7 +98,8 @@
             android:gravity="center"
             android:padding="@dimen/padding_large"
             android:text="@string/msg_no_expenses"
-            android:textColor="@color/textSecondary" />
+            android:textColor="@color/textSecondary"
+            android:textSize="@dimen/text_size_subtitle" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerExpenses"

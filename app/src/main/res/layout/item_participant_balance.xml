@@ -27,7 +27,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/padding_tiny"
             android:orientation="horizontal">
 
             <TextView
@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="@color/textSecondary"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_size_body"
                 tools:text="Paid: ₹1000.00" />
 
             <TextView
@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="@color/textSecondary"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_size_body"
                 tools:text="Share: ₹250.00" />
 
         </LinearLayout>
@@ -54,7 +54,7 @@
             android:id="@+id/textBalance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/padding_tiny"
             android:textSize="@dimen/text_size_subtitle"
             android:textStyle="bold"
             tools:text="Gets back ₹750.00" />

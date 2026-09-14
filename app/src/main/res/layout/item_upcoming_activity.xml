@@ -28,9 +28,9 @@
             android:id="@+id/textActivityDateTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/padding_tiny"
             android:textColor="@color/textSecondary"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_size_body"
             tools:text="12 Oct 2026, 10:00 AM" />
 
     </LinearLayout>

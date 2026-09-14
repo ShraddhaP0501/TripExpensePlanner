@@ -54,7 +54,7 @@
                     android:id="@+id/textTotalExpenses"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="@dimen/padding_tiny"
                     android:text="@string/placeholder_total_expenses"
                     android:textColor="@color/primary"
                     android:textSize="@dimen/text_size_amount"
@@ -134,7 +134,8 @@
                 android:gravity="center"
                 android:padding="@dimen/padding_large"
                 android:text="@string/msg_no_upcoming_activities"
-                android:textColor="@color/textSecondary" />
+                android:textColor="@color/textSecondary"
+                android:textSize="@dimen/text_size_subtitle" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerUpcomingActivities"

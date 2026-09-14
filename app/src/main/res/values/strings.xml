@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Trip Expense and Planner</string>
     <string name="welcome_message">Trip Expense and Planner</string>
+    <string name="content_desc_back">Back</string>
 
     <!-- Dashboard -->
     <string name="label_add_new_trip">+ Add New Trip</string>

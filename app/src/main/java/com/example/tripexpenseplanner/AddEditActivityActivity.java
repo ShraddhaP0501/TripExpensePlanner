@@ -85,6 +85,7 @@ public class AddEditActivityActivity extends AppCompatActivity {
         editActivityDate.setOnClickListener(v -> showDatePicker());
         editActivityTime.setOnClickListener(v -> showTimePicker());
 
+        findViewById(R.id.buttonBack).setOnClickListener(v -> finish());
         findViewById(R.id.buttonCancelActivity).setOnClickListener(v -> finish());
         buttonSaveActivity.setOnClickListener(v -> validateAndSaveActivity());
 

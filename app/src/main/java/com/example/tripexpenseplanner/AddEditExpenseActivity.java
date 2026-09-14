@@ -125,6 +125,7 @@ public class AddEditExpenseActivity extends AppCompatActivity {
 
         editExpenseDate.setOnClickListener(v -> showDatePicker());
 
+        findViewById(R.id.buttonBack).setOnClickListener(v -> finish());
         findViewById(R.id.buttonCancelExpense).setOnClickListener(v -> finish());
         buttonSaveExpense.setOnClickListener(v -> validateAndSaveExpense());
 

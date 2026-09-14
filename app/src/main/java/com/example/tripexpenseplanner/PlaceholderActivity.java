@@ -32,5 +32,7 @@ public class PlaceholderActivity extends AppCompatActivity {
         textTitle.setText(screenTitle);
         setTitle(screenTitle);
         textTripId.setText(getString(R.string.format_trip_id, tripId));
+
+        findViewById(R.id.buttonBack).setOnClickListener(v -> finish());
     }
 }

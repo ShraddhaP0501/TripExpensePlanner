@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,6 +23,7 @@ import com.example.tripexpenseplanner.database.DatabaseHelper;
 import com.example.tripexpenseplanner.model.Reminder;
 import com.example.tripexpenseplanner.model.Trip;
 import com.example.tripexpenseplanner.notification.ReminderScheduler;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
 
@@ -82,6 +82,7 @@ public class RemindersActivity extends AppCompatActivity implements ReminderAdap
         recyclerReminders.setLayoutManager(new LinearLayoutManager(this));
         recyclerReminders.setAdapter(reminderAdapter);
 
+        findViewById(R.id.buttonBack).setOnClickListener(v -> finish());
         findViewById(R.id.buttonAddReminder).setOnClickListener(v -> openAddReminder());
 
         updateTitle();
@@ -140,7 +141,7 @@ public class RemindersActivity extends AppCompatActivity implements ReminderAdap
 
     @Override
     public void onCancelReminder(Reminder reminder) {
-        new AlertDialog.Builder(this)
+        new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.dialog_cancel_reminder_title)
                 .setMessage(R.string.dialog_cancel_reminder_message)
                 .setPositiveButton(R.string.label_cancel_reminder, (dialog, which) -> cancelReminder(reminder))

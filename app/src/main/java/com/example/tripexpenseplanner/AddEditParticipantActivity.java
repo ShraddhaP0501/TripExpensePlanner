@@ -59,6 +59,7 @@ public class AddEditParticipantActivity extends AppCompatActivity {
         editParticipantName = findViewById(R.id.editParticipantName);
         buttonSaveParticipant = findViewById(R.id.buttonSaveParticipant);
 
+        findViewById(R.id.buttonBack).setOnClickListener(v -> finish());
         findViewById(R.id.buttonCancelParticipant).setOnClickListener(v -> finish());
         buttonSaveParticipant.setOnClickListener(v -> validateAndSaveParticipant());
 

@@ -28,7 +28,7 @@
 
         <Button
             android:id="@+id/buttonEditParticipant"
-            style="?attr/borderlessButtonStyle"
+            style="@style/AppButton.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="0dp"
@@ -40,7 +40,7 @@
 
         <Button
             android:id="@+id/buttonDeleteParticipant"
-            style="?attr/borderlessButtonStyle"
+            style="@style/AppButton.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="0dp"
@@ -48,7 +48,7 @@
             android:paddingStart="@dimen/padding_small"
             android:paddingEnd="@dimen/padding_small"
             android:text="@string/label_delete"
-            android:textColor="#C62828" />
+            android:textColor="@color/danger" />
 
     </LinearLayout>
 

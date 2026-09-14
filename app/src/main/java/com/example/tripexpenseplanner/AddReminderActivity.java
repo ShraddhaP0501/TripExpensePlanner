@@ -86,6 +86,7 @@ public class AddReminderActivity extends AppCompatActivity {
         editReminderDate.setOnClickListener(v -> showDatePicker());
         editReminderTime.setOnClickListener(v -> showTimePicker());
 
+        findViewById(R.id.buttonBack).setOnClickListener(v -> finish());
         findViewById(R.id.buttonCancelAddReminder).setOnClickListener(v -> finish());
         findViewById(R.id.buttonSaveReminder).setOnClickListener(v -> validateAndSaveReminder());
     }

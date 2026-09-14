@@ -40,6 +40,8 @@ public class MyTripsActivity extends AppCompatActivity implements TripAdapter.On
         tripAdapter = new TripAdapter(this);
         recyclerTrips.setLayoutManager(new LinearLayoutManager(this));
         recyclerTrips.setAdapter(tripAdapter);
+
+        findViewById(R.id.buttonBack).setOnClickListener(v -> finish());
     }
 
     @Override

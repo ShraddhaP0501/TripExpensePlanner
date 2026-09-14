@@ -79,6 +79,7 @@ public class AddTripActivity extends AppCompatActivity {
         editStartDate.setOnClickListener(v -> showDatePicker(editStartDate, layoutStartDate));
         editEndDate.setOnClickListener(v -> showDatePicker(editEndDate, layoutEndDate));
 
+        findViewById(R.id.buttonBack).setOnClickListener(v -> finish());
         findViewById(R.id.buttonCancel).setOnClickListener(v -> finish());
         buttonSaveTrip.setOnClickListener(v -> validateAndSaveTrip());
 

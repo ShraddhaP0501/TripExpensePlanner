@@ -28,32 +28,32 @@
             android:id="@+id/textReminderType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="@dimen/padding_tiny"
             android:textColor="@color/primary"
-            android:textSize="13sp"
+            android:textSize="@dimen/text_size_caption"
             tools:text="Hotel Booking" />
 
         <TextView
             android:id="@+id/textReminderDateTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/padding_tiny"
             android:textColor="@color/textSecondary"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_size_body"
             tools:text="2026-10-12 at 14:00" />
 
         <TextView
             android:id="@+id/textReminderNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/padding_tiny"
             android:textColor="@color/textSecondary"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_size_body"
             tools:text="Reservation number: 12345" />
 
         <Button
             android:id="@+id/buttonCancelReminder"
-            style="?attr/borderlessButtonStyle"
+            style="@style/AppButton.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_small"
@@ -62,7 +62,7 @@
             android:paddingStart="@dimen/padding_small"
             android:paddingEnd="@dimen/padding_small"
             android:text="@string/label_cancel_reminder"
-            android:textColor="#C62828" />
+            android:textColor="@color/danger" />
 
     </LinearLayout>
 

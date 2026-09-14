@@ -9,11 +9,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tripexpenseplanner.database.DatabaseHelper;
 import com.example.tripexpenseplanner.model.Trip;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 /**
  * Shows full details for one trip and lets the user Edit or Delete it, and
@@ -53,6 +53,7 @@ public class TripDetailsActivity extends AppCompatActivity {
         findViewById(R.id.buttonEditTrip).setOnClickListener(v -> openEditTrip());
         findViewById(R.id.buttonDeleteTrip).setOnClickListener(v -> confirmDeleteTrip());
 
+        findViewById(R.id.buttonBack).setOnClickListener(v -> finish());
         findViewById(R.id.buttonItinerary).setOnClickListener(v -> openItinerary());
         findViewById(R.id.buttonExpenses).setOnClickListener(v -> openExpenses());
         findViewById(R.id.buttonParticipants).setOnClickListener(v -> openParticipants());
@@ -131,7 +132,7 @@ public class TripDetailsActivity extends AppCompatActivity {
     }
 
     private void confirmDeleteTrip() {
-        new AlertDialog.Builder(this)
+        new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.dialog_delete_trip_title)
                 .setMessage(R.string.dialog_delete_trip_message)
                 .setPositiveButton(R.string.label_delete, (dialog, which) -> deleteTrip())

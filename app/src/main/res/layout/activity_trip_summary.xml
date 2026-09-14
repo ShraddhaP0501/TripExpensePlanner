@@ -13,20 +13,38 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textSummaryTitle"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primary"
-            android:gravity="center"
-            android:paddingStart="@dimen/padding_medium"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/padding_small"
             android:paddingTop="@dimen/padding_large"
             android:paddingEnd="@dimen/padding_medium"
-            android:paddingBottom="@dimen/padding_large"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_title"
-            android:textStyle="bold"
-            tools:text="Trip Summary" />
+            android:paddingBottom="@dimen/padding_large">
+
+            <ImageButton
+                android:id="@+id/buttonBack"
+                android:layout_width="@dimen/touch_target_min"
+                android:layout_height="@dimen/touch_target_min"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/content_desc_back"
+                android:padding="@dimen/padding_small"
+                android:src="@drawable/ic_back_arrow" />
+
+            <TextView
+                android:id="@+id/textSummaryTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingEnd="@dimen/touch_target_min"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_title"
+                android:textStyle="bold"
+                tools:text="Trip Summary" />
+
+        </LinearLayout>
 
         <!-- Trip Overview: always shown, regardless of participants/expenses -->
         <com.google.android.material.card.MaterialCardView
@@ -57,34 +75,34 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding_small"
                     android:textColor="@color/textPrimary"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/text_size_body"
                     tools:text="Trip Name: Goa Trip" />
 
                 <TextView
                     android:id="@+id/textOverviewDestination"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="@dimen/padding_tiny"
                     android:textColor="@color/textPrimary"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/text_size_body"
                     tools:text="Destination: Goa, India" />
 
                 <TextView
                     android:id="@+id/textOverviewDates"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="@dimen/padding_tiny"
                     android:textColor="@color/textPrimary"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/text_size_body"
                     tools:text="2026-10-10 to 2026-10-15" />
 
                 <TextView
                     android:id="@+id/textOverviewDuration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="@dimen/padding_tiny"
                     android:textColor="@color/textPrimary"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/text_size_body"
                     tools:text="Duration: 6 days" />
 
             </LinearLayout>
@@ -121,25 +139,25 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding_small"
                     android:textColor="@color/textPrimary"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/text_size_body"
                     tools:text="Activities: 3" />
 
                 <TextView
                     android:id="@+id/textExpenseCount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="@dimen/padding_tiny"
                     android:textColor="@color/textPrimary"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/text_size_body"
                     tools:text="Expenses: 5" />
 
                 <TextView
                     android:id="@+id/textParticipantCount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="@dimen/padding_tiny"
                     android:textColor="@color/textPrimary"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/text_size_body"
                     tools:text="Participants: 4" />
 
                 <TextView

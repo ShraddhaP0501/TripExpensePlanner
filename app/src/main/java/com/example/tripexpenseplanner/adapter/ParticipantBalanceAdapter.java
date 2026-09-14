@@ -1,12 +1,13 @@
 package com.example.tripexpenseplanner.adapter;
 
-import android.graphics.Color;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tripexpenseplanner.R;
@@ -23,10 +24,6 @@ public class ParticipantBalanceAdapter extends RecyclerView.Adapter<ParticipantB
 
     /** Anything smaller than this (in rupees) is treated as "settled up" to avoid rounding noise. */
     private static final double SETTLED_THRESHOLD = 0.004;
-
-    private static final int COLOR_POSITIVE = Color.parseColor("#2E7D32");
-    private static final int COLOR_NEGATIVE = Color.parseColor("#C62828");
-    private static final int COLOR_SETTLED = Color.parseColor("#757575");
 
     private List<ParticipantBalance> balances = new ArrayList<>();
 
@@ -46,7 +43,7 @@ public class ParticipantBalanceAdapter extends RecyclerView.Adapter<ParticipantB
     @Override
     public void onBindViewHolder(@NonNull BalanceViewHolder holder, int position) {
         ParticipantBalance balance = balances.get(position);
-        android.content.Context context = holder.itemView.getContext();
+        Context context = holder.itemView.getContext();
 
         holder.textParticipantName.setText(balance.getParticipantName());
         holder.textPaidAmount.setText(
@@ -60,14 +57,14 @@ public class ParticipantBalanceAdapter extends RecyclerView.Adapter<ParticipantB
         if (net > SETTLED_THRESHOLD) {
             String amountText = context.getString(R.string.format_amount, net);
             holder.textBalance.setText(context.getString(R.string.format_gets_back, amountText));
-            holder.textBalance.setTextColor(COLOR_POSITIVE);
+            holder.textBalance.setTextColor(ContextCompat.getColor(context, R.color.primary));
         } else if (net < -SETTLED_THRESHOLD) {
             String amountText = context.getString(R.string.format_amount, -net);
             holder.textBalance.setText(context.getString(R.string.format_owes_amount, amountText));
-            holder.textBalance.setTextColor(COLOR_NEGATIVE);
+            holder.textBalance.setTextColor(ContextCompat.getColor(context, R.color.danger));
         } else {
             holder.textBalance.setText(R.string.msg_settled_up);
-            holder.textBalance.setTextColor(COLOR_SETTLED);
+            holder.textBalance.setTextColor(ContextCompat.getColor(context, R.color.textSecondary));
         }
     }
 

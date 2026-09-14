@@ -45,27 +45,27 @@
             android:id="@+id/textExpensePaidBy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/padding_tiny"
             android:textColor="@color/textSecondary"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_size_body"
             tools:text="Paid by Shraddha" />
 
         <TextView
             android:id="@+id/textExpenseDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="@dimen/padding_tiny"
             android:textColor="@color/textSecondary"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_size_body"
             tools:text="2026-10-12" />
 
         <TextView
             android:id="@+id/textExpenseDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/padding_tiny"
             android:textColor="@color/textSecondary"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_size_body"
             tools:text="Dinner at the beach shack." />
 
         <LinearLayout
@@ -76,7 +76,7 @@
 
             <Button
                 android:id="@+id/buttonEditExpense"
-                style="?attr/borderlessButtonStyle"
+                style="@style/AppButton.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minWidth="0dp"
@@ -88,7 +88,7 @@
 
             <Button
                 android:id="@+id/buttonDeleteExpense"
-                style="?attr/borderlessButtonStyle"
+                style="@style/AppButton.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minWidth="0dp"
@@ -96,7 +96,7 @@
                 android:paddingStart="@dimen/padding_small"
                 android:paddingEnd="@dimen/padding_small"
                 android:text="@string/label_delete"
-                android:textColor="#C62828" />
+                android:textColor="@color/danger" />
 
         </LinearLayout>
 

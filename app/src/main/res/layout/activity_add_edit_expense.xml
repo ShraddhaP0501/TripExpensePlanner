@@ -13,18 +13,36 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textFormTitle"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primary"
-            android:gravity="center"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:paddingTop="@dimen/padding_large"
-            android:paddingBottom="@dimen/padding_large"
-            android:text="@string/title_add_expense"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_title"
-            android:textStyle="bold" />
+            android:paddingBottom="@dimen/padding_large">
+
+            <ImageButton
+                android:id="@+id/buttonBack"
+                android:layout_width="@dimen/touch_target_min"
+                android:layout_height="@dimen/touch_target_min"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/content_desc_back"
+                android:padding="@dimen/padding_small"
+                android:src="@drawable/ic_back_arrow" />
+
+            <TextView
+                android:id="@+id/textFormTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingEnd="@dimen/touch_target_min"
+                android:text="@string/title_add_expense"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_title"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,13 +56,13 @@
                 android:layout_height="wrap_content"
                 android:text="@string/hint_category"
                 android:textColor="@color/textSecondary"
-                android:textSize="14sp" />
+                android:textSize="@dimen/text_size_body" />
 
             <Spinner
                 android:id="@+id/spinnerCategory"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/padding_tiny"
                 android:background="@color/cardBackground"
                 android:entries="@array/expense_categories"
                 android:padding="@dimen/padding_small" />
@@ -53,8 +71,8 @@
                 android:id="@+id/textErrorCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#C62828"
-                android:textSize="12sp"
+                android:textColor="@color/danger"
+                android:textSize="@dimen/text_size_error"
                 android:visibility="gone"
                 tools:text="Please select a category"
                 tools:visibility="visible" />
@@ -82,13 +100,13 @@
                 android:layout_marginTop="@dimen/padding_medium"
                 android:text="@string/hint_paid_by"
                 android:textColor="@color/textSecondary"
-                android:textSize="14sp" />
+                android:textSize="@dimen/text_size_body" />
 
             <Spinner
                 android:id="@+id/spinnerPaidBy"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/padding_tiny"
                 android:background="@color/cardBackground"
                 android:padding="@dimen/padding_small" />
 
@@ -96,8 +114,8 @@
                 android:id="@+id/textErrorPaidBy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#C62828"
-                android:textSize="12sp"
+                android:textColor="@color/danger"
+                android:textSize="@dimen/text_size_error"
                 android:visibility="gone"
                 tools:text="Please select who paid"
                 tools:visibility="visible" />
@@ -109,21 +127,21 @@
                 android:layout_marginTop="@dimen/padding_medium"
                 android:text="@string/label_split_among"
                 android:textColor="@color/textSecondary"
-                android:textSize="14sp" />
+                android:textSize="@dimen/text_size_body" />
 
             <LinearLayout
                 android:id="@+id/containerSplitParticipants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/padding_tiny"
                 android:orientation="vertical" />
 
             <TextView
                 android:id="@+id/textErrorSplitParticipants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#C62828"
-                android:textSize="12sp"
+                android:textColor="@color/danger"
+                android:textSize="@dimen/text_size_error"
                 android:visibility="gone"
                 tools:text="Please select at least one participant"
                 tools:visibility="visible" />

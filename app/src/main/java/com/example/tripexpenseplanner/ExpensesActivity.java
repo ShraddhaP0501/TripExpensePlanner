@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +16,7 @@ import com.example.tripexpenseplanner.adapter.ExpenseAdapter;
 import com.example.tripexpenseplanner.database.DatabaseHelper;
 import com.example.tripexpenseplanner.model.Expense;
 import com.example.tripexpenseplanner.model.Trip;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
 
@@ -64,6 +64,7 @@ public class ExpensesActivity extends AppCompatActivity implements ExpenseAdapte
         recyclerExpenses.setLayoutManager(new LinearLayoutManager(this));
         recyclerExpenses.setAdapter(expenseAdapter);
 
+        findViewById(R.id.buttonBack).setOnClickListener(v -> finish());
         findViewById(R.id.buttonAddExpense).setOnClickListener(v -> openAddExpense());
 
         updateTitle();
@@ -119,7 +120,7 @@ public class ExpensesActivity extends AppCompatActivity implements ExpenseAdapte
 
     @Override
     public void onDeleteExpense(Expense expense) {
-        new AlertDialog.Builder(this)
+        new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.dialog_delete_expense_title)
                 .setMessage(R.string.dialog_delete_expense_message)
                 .setPositiveButton(R.string.label_delete, (dialog, which) -> deleteExpense(expense))

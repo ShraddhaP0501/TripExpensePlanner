@@ -13,20 +13,38 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textTripName"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primary"
-            android:gravity="center"
-            android:paddingStart="@dimen/padding_medium"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/padding_small"
             android:paddingTop="@dimen/padding_large"
             android:paddingEnd="@dimen/padding_medium"
-            android:paddingBottom="@dimen/padding_large"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_title"
-            android:textStyle="bold"
-            tools:text="Goa Trip" />
+            android:paddingBottom="@dimen/padding_large">
+
+            <ImageButton
+                android:id="@+id/buttonBack"
+                android:layout_width="@dimen/touch_target_min"
+                android:layout_height="@dimen/touch_target_min"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/content_desc_back"
+                android:padding="@dimen/padding_small"
+                android:src="@drawable/ic_back_arrow" />
+
+            <TextView
+                android:id="@+id/textTripName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingEnd="@dimen/touch_target_min"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_title"
+                android:textStyle="bold"
+                tools:text="Goa Trip" />
+
+        </LinearLayout>
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
@@ -47,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/label_destination"
                     android:textColor="@color/textSecondary"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/text_size_body" />
 
                 <TextView
                     android:id="@+id/textDestination"
@@ -63,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/label_start_date"
                     android:textColor="@color/textSecondary"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/text_size_body" />
 
                 <TextView
                     android:id="@+id/textStartDate"
@@ -79,7 +97,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/label_end_date"
                     android:textColor="@color/textSecondary"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/text_size_body" />
 
                 <TextView
                     android:id="@+id/textEndDate"
@@ -96,7 +114,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/label_notes"
                     android:textColor="@color/textSecondary"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/text_size_body" />
 
                 <TextView
                     android:id="@+id/textNotes"
@@ -214,7 +232,7 @@
                 android:layout_height="@dimen/button_height"
                 android:layout_marginStart="@dimen/padding_small"
                 android:layout_weight="1"
-                android:backgroundTint="#C62828"
+                android:backgroundTint="@color/danger"
                 android:text="@string/label_delete_trip"
                 android:textColor="@color/white" />
 

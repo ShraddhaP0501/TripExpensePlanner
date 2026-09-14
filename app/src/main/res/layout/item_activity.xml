@@ -28,18 +28,18 @@
             android:id="@+id/textActivityDateTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/padding_tiny"
             android:textColor="@color/primary"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_size_body"
             tools:text="2026-10-12, 10:00 AM" />
 
         <TextView
             android:id="@+id/textActivityDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/padding_tiny"
             android:textColor="@color/textSecondary"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_size_body"
             tools:text="Meet at the main gate." />
 
         <LinearLayout
@@ -50,7 +50,7 @@
 
             <Button
                 android:id="@+id/buttonEditActivity"
-                style="?attr/borderlessButtonStyle"
+                style="@style/AppButton.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minWidth="0dp"
@@ -62,7 +62,7 @@
 
             <Button
                 android:id="@+id/buttonDeleteActivity"
-                style="?attr/borderlessButtonStyle"
+                style="@style/AppButton.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minWidth="0dp"
@@ -70,7 +70,7 @@
                 android:paddingStart="@dimen/padding_small"
                 android:paddingEnd="@dimen/padding_small"
                 android:text="@string/label_delete"
-                android:textColor="#C62828" />
+                android:textColor="@color/danger" />
 
         </LinearLayout>
 

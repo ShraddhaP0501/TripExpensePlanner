@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +16,7 @@ import com.example.tripexpenseplanner.adapter.TripActivityAdapter;
 import com.example.tripexpenseplanner.database.DatabaseHelper;
 import com.example.tripexpenseplanner.model.Trip;
 import com.example.tripexpenseplanner.model.TripActivity;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
 
@@ -61,6 +61,7 @@ public class ItineraryActivity extends AppCompatActivity implements TripActivity
         recyclerActivities.setLayoutManager(new LinearLayoutManager(this));
         recyclerActivities.setAdapter(activityAdapter);
 
+        findViewById(R.id.buttonBack).setOnClickListener(v -> finish());
         findViewById(R.id.buttonAddActivity).setOnClickListener(v -> openAddActivity());
 
         updateTitle();
@@ -113,7 +114,7 @@ public class ItineraryActivity extends AppCompatActivity implements TripActivity
 
     @Override
     public void onDeleteActivity(TripActivity activity) {
-        new AlertDialog.Builder(this)
+        new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.dialog_delete_activity_title)
                 .setMessage(R.string.dialog_delete_activity_message)
                 .setPositiveButton(R.string.label_delete, (dialog, which) -> deleteActivity(activity))

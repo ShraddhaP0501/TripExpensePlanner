@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +16,7 @@ import com.example.tripexpenseplanner.adapter.ParticipantAdapter;
 import com.example.tripexpenseplanner.database.DatabaseHelper;
 import com.example.tripexpenseplanner.model.Participant;
 import com.example.tripexpenseplanner.model.Trip;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
 
@@ -61,6 +61,7 @@ public class ParticipantsActivity extends AppCompatActivity implements Participa
         recyclerParticipants.setLayoutManager(new LinearLayoutManager(this));
         recyclerParticipants.setAdapter(participantAdapter);
 
+        findViewById(R.id.buttonBack).setOnClickListener(v -> finish());
         findViewById(R.id.buttonAddParticipant).setOnClickListener(v -> openAddParticipant());
 
         updateTitle();
@@ -112,7 +113,7 @@ public class ParticipantsActivity extends AppCompatActivity implements Participa
 
     @Override
     public void onDeleteParticipant(Participant participant) {
-        new AlertDialog.Builder(this)
+        new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.dialog_delete_participant_title)
                 .setMessage(R.string.dialog_delete_participant_message)
                 .setPositiveButton(R.string.label_delete, (dialog, which) -> deleteParticipant(participant))

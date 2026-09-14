@@ -120,6 +120,8 @@ public class TripSummaryActivity extends AppCompatActivity {
         recyclerBalances.setLayoutManager(new LinearLayoutManager(this));
         recyclerBalances.setAdapter(balanceAdapter);
 
+        findViewById(R.id.buttonBack).setOnClickListener(v -> finish());
+
         updateTitle();
     }
 
