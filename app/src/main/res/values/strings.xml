@@ -2,4 +2,14 @@
 <resources>
     <string name="app_name">Trip Expense and Planner</string>
     <string name="welcome_message">Trip Expense and Planner</string>
+
+    <!-- Dashboard -->
+    <string name="label_add_new_trip">+ Add New Trip</string>
+    <string name="label_my_trips">My Trips</string>
+    <string name="label_expenses">Expenses</string>
+    <string name="label_upcoming_activities">Upcoming Activities</string>
+    <string name="label_total_expenses">Total Expenses</string>
+    <string name="placeholder_total_expenses">₹0.00</string>
+    <string name="msg_no_upcoming_activities">No upcoming activities yet</string>
+    <string name="msg_feature_coming_soon">This feature is coming soon</string>
 </resources>
