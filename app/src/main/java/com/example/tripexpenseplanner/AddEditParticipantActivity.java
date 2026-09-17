@@ -36,6 +36,8 @@ public class AddEditParticipantActivity extends AppCompatActivity {
     private TextView textFormTitle;
     private TextInputLayout layoutParticipantName;
     private TextInputEditText editParticipantName;
+    private TextInputLayout layoutParticipantContact;
+    private TextInputEditText editParticipantContact;
     private Button buttonSaveParticipant;
 
     @Override
@@ -57,6 +59,8 @@ public class AddEditParticipantActivity extends AppCompatActivity {
         textFormTitle = findViewById(R.id.textFormTitle);
         layoutParticipantName = findViewById(R.id.layoutParticipantName);
         editParticipantName = findViewById(R.id.editParticipantName);
+        layoutParticipantContact = findViewById(R.id.layoutParticipantContact);
+        editParticipantContact = findViewById(R.id.editParticipantContact);
         buttonSaveParticipant = findViewById(R.id.buttonSaveParticipant);
 
         findViewById(R.id.buttonBack).setOnClickListener(v -> finish());
@@ -97,6 +101,7 @@ public class AddEditParticipantActivity extends AppCompatActivity {
             return;
         }
         editParticipantName.setText(participant.getName());
+        editParticipantContact.setText(participant.getContact());
     }
 
     /**
@@ -106,13 +111,19 @@ public class AddEditParticipantActivity extends AppCompatActivity {
         layoutParticipantName.setError(null);
 
         String name = textOf(editParticipantName);
+        String contact = textOf(editParticipantContact);
 
         if (TextUtils.isEmpty(name)) {
             layoutParticipantName.setError(getString(R.string.error_participant_name_required));
             return;
         }
 
-        Participant participant = new Participant(tripId, name);
+        if (dbHelper.participantNameExists(tripId, name, editingParticipantId)) {
+            layoutParticipantName.setError(getString(R.string.error_duplicate_participant));
+            return;
+        }
+
+        Participant participant = new Participant(tripId, name, TextUtils.isEmpty(contact) ? null : contact, 0L);
         if (isEditMode()) {
             participant.setId(editingParticipantId);
         }

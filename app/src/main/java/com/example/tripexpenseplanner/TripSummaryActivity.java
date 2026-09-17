@@ -294,6 +294,20 @@ public class TripSummaryActivity extends AppCompatActivity {
             }
         }
 
+        // A settlement changes the outstanding balance, but never removes the
+        // original expense or its split rows.
+        for (Participant from : participants) {
+            for (Participant to : participants) {
+                if (from.getId() == to.getId()) continue;
+                double settled = dbHelper.getSettledAmount(tripId, from.getId(), to.getId());
+                long cents = Math.round(settled * 100);
+                if (cents > 0) {
+                    totalPaidCents.put(from.getId(), totalPaidCents.get(from.getId()) + cents);
+                    totalPaidCents.put(to.getId(), totalPaidCents.get(to.getId()) - cents);
+                }
+            }
+        }
+
         List<ParticipantBalance> balances = new ArrayList<>();
         for (Participant participant : participants) {
             double paid = totalPaidCents.get(participant.getId()) / 100.0;
@@ -320,9 +334,9 @@ public class TripSummaryActivity extends AppCompatActivity {
         for (ParticipantBalance balance : balances) {
             long netCents = Math.round(balance.getBalance() * 100);
             if (netCents > 0) {
-                creditors.add(new MutableCents(balance.getParticipantName(), netCents));
+                creditors.add(new MutableCents(balance.getParticipantId(), balance.getParticipantName(), netCents));
             } else if (netCents < 0) {
-                debtors.add(new MutableCents(balance.getParticipantName(), -netCents));
+                debtors.add(new MutableCents(balance.getParticipantId(), balance.getParticipantName(), -netCents));
             }
         }
 
@@ -338,7 +352,8 @@ public class TripSummaryActivity extends AppCompatActivity {
             MutableCents creditor = creditors.get(creditorIndex);
 
             long settleCents = Math.min(debtor.cents, creditor.cents);
-            settlements.add(new SettlementEntry(debtor.name, creditor.name, settleCents / 100.0));
+                settlements.add(new SettlementEntry(debtor.memberId, creditor.memberId,
+                    debtor.name, creditor.name, settleCents / 100.0));
 
             debtor.cents -= settleCents;
             creditor.cents -= settleCents;
@@ -367,13 +382,25 @@ public class TripSummaryActivity extends AppCompatActivity {
         textAllSettled.setVisibility(View.GONE);
 
         for (SettlementEntry entry : settlements) {
+            LinearLayout row = new LinearLayout(this);
+            row.setOrientation(LinearLayout.HORIZONTAL);
+            row.setGravity(android.view.Gravity.CENTER_VERTICAL);
             TextView line = new TextView(this);
+            line.setLayoutParams(new LinearLayout.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1));
             String amountText = getString(R.string.format_amount, entry.getAmount());
             line.setText(getString(R.string.format_settlement, entry.getFromName(), entry.getToName(), amountText));
             line.setTextColor(getColor(R.color.textPrimary));
             line.setTextSize(16f);
             line.setPadding(0, 0, 0, dpToPx(8));
-            containerSettlements.addView(line);
+            row.addView(line);
+            android.widget.Button paidButton = new android.widget.Button(this);
+            paidButton.setText(R.string.label_mark_paid);
+            paidButton.setOnClickListener(v -> {
+                dbHelper.insertSettlement(tripId, entry.getFromMemberId(), entry.getToMemberId(), entry.getAmount());
+                loadSummary();
+            });
+            row.addView(paidButton);
+            containerSettlements.addView(row);
         }
     }
 
@@ -383,10 +410,12 @@ public class TripSummaryActivity extends AppCompatActivity {
 
     /** A mutable running balance (in integer cents) used only while computing settlements. */
     private static class MutableCents {
+        final long memberId;
         final String name;
         long cents;
 
-        MutableCents(String name, long cents) {
+        MutableCents(long memberId, String name, long cents) {
+            this.memberId = memberId;
             this.name = name;
             this.cents = cents;
         }

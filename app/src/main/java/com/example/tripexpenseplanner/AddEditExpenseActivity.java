@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,6 +68,7 @@ public class AddEditExpenseActivity extends AppCompatActivity {
     private List<Participant> tripParticipants = new ArrayList<>();
     /** Maps each Split Among checkbox to the participant it represents. */
     private final Map<CheckBox, Participant> checkBoxParticipants = new LinkedHashMap<>();
+    private final Map<Participant, TextInputEditText> customShareInputs = new LinkedHashMap<>();
 
     private TextView textFormTitle;
     private Spinner spinnerCategory;
@@ -74,6 +76,9 @@ public class AddEditExpenseActivity extends AppCompatActivity {
     private Spinner spinnerPaidBy;
     private TextView textErrorPaidBy;
     private LinearLayout containerSplitParticipants;
+    private LinearLayout containerCustomShares;
+    private RadioGroup splitModeGroup;
+    private RadioGroup splitTypeGroup;
     private TextView textErrorSplitParticipants;
     private TextInputLayout layoutAmount;
     private TextInputLayout layoutExpenseDate;
@@ -100,6 +105,7 @@ public class AddEditExpenseActivity extends AppCompatActivity {
             return;
         }
 
+        dbHelper.ensureCurrentUserParticipant(tripId);
         tripParticipants = dbHelper.getParticipantsByTrip(tripId);
         if (tripParticipants.isEmpty()) {
             // Both "who paid" and "split among" need at least one participant to choose from.
@@ -114,6 +120,9 @@ public class AddEditExpenseActivity extends AppCompatActivity {
         spinnerPaidBy = findViewById(R.id.spinnerPaidBy);
         textErrorPaidBy = findViewById(R.id.textErrorPaidBy);
         containerSplitParticipants = findViewById(R.id.containerSplitParticipants);
+        containerCustomShares = findViewById(R.id.containerCustomShares);
+        splitModeGroup = findViewById(R.id.splitModeGroup);
+        splitTypeGroup = findViewById(R.id.splitTypeGroup);
         textErrorSplitParticipants = findViewById(R.id.textErrorSplitParticipants);
         layoutAmount = findViewById(R.id.layoutAmount);
         layoutExpenseDate = findViewById(R.id.layoutExpenseDate);
@@ -130,6 +139,16 @@ public class AddEditExpenseActivity extends AppCompatActivity {
         buttonSaveExpense.setOnClickListener(v -> validateAndSaveExpense());
 
         setupPaidBySpinner();
+        splitModeGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            boolean splitting = checkedId == R.id.radioSplitExpense;
+            splitTypeGroup.setVisibility(splitting ? View.VISIBLE : View.GONE);
+            containerSplitParticipants.setVisibility(splitting ? View.VISIBLE : View.GONE);
+            containerCustomShares.setVisibility(splitting && splitTypeGroup.getCheckedRadioButtonId() == R.id.radioCustomSplit ? View.VISIBLE : View.GONE);
+        });
+        splitTypeGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            containerCustomShares.setVisibility(checkedId == R.id.radioCustomSplit ? View.VISIBLE : View.GONE);
+            if (checkedId == R.id.radioCustomSplit) rebuildCustomShareInputs();
+        });
 
         if (isEditMode()) {
             setTitle(R.string.title_edit_expense);
@@ -140,7 +159,8 @@ public class AddEditExpenseActivity extends AppCompatActivity {
             setTitle(R.string.title_add_expense);
             textFormTitle.setText(R.string.title_add_expense);
             // New expense: default to splitting equally among everyone, including the payer.
-            buildSplitChecklist(new HashSet<>(participantIds(tripParticipants)));
+            splitModeGroup.check(R.id.radioNoSplit);
+            buildSplitChecklist(new HashSet<>());
         }
 
         NavigationHelper.setup(this, R.id.navMyTrips);
@@ -190,10 +210,31 @@ public class AddEditExpenseActivity extends AppCompatActivity {
             CheckBox checkBox = new CheckBox(this);
             checkBox.setText(participant.getName());
             checkBox.setChecked(checkedParticipantIds.contains(participant.getId()));
-            checkBox.setOnCheckedChangeListener((buttonView, isChecked) ->
-                    textErrorSplitParticipants.setVisibility(View.GONE));
+            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                textErrorSplitParticipants.setVisibility(View.GONE);
+                if (splitTypeGroup != null && splitTypeGroup.getCheckedRadioButtonId() == R.id.radioCustomSplit) {
+                    rebuildCustomShareInputs();
+                }
+            });
             containerSplitParticipants.addView(checkBox);
             checkBoxParticipants.put(checkBox, participant);
+        }
+    }
+
+    private void rebuildCustomShareInputs() {
+        if (containerCustomShares == null) return;
+        containerCustomShares.removeAllViews();
+        customShareInputs.clear();
+        for (Map.Entry<CheckBox, Participant> entry : checkBoxParticipants.entrySet()) {
+            if (!entry.getKey().isChecked()) continue;
+            TextInputLayout layout = new TextInputLayout(this);
+            layout.setHint(entry.getValue().getName());
+            layout.setBoxBackgroundMode(TextInputLayout.BOX_BACKGROUND_OUTLINE);
+            TextInputEditText input = new TextInputEditText(this);
+            input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            layout.addView(input);
+            containerCustomShares.addView(layout);
+            customShareInputs.put(entry.getValue(), input);
         }
     }
 
@@ -210,16 +251,19 @@ public class AddEditExpenseActivity extends AppCompatActivity {
         }
 
         selectCategory(expense.getCategory());
-        selectPayer(expense.getPaidBy());
+        selectPayer(dbHelper.getExpensePaidByMemberId(editingExpenseId), expense.getPaidBy());
         editAmount.setText(String.valueOf(expense.getAmount()));
         editExpenseDate.setText(expense.getExpenseDate());
         editExpenseDescription.setText(expense.getDescription());
 
+        List<ExpenseParticipant> savedShares = dbHelper.getExpenseParticipantsByExpense(editingExpenseId);
         Set<Long> previouslySelectedIds = new HashSet<>();
-        for (ExpenseParticipant share : dbHelper.getExpenseParticipantsByExpense(editingExpenseId)) {
+        for (ExpenseParticipant share : savedShares) {
             previouslySelectedIds.add(share.getParticipantId());
         }
         buildSplitChecklist(previouslySelectedIds);
+        splitModeGroup.check(savedShares.isEmpty() ? R.id.radioNoSplit : R.id.radioSplitExpense);
+        splitTypeGroup.check(R.id.radioEqualSplit);
     }
 
     /**
@@ -250,6 +294,18 @@ public class AddEditExpenseActivity extends AppCompatActivity {
         if (position >= 0) {
             spinnerPaidBy.setSelection(position);
         }
+    }
+
+    private void selectPayer(long participantId, String paidByName) {
+        if (participantId > 0) {
+            for (int i = 1; i < spinnerPaidBy.getAdapter().getCount(); i++) {
+                if (tripParticipants.get(i - 1).getId() == participantId) {
+                    spinnerPaidBy.setSelection(i);
+                    return;
+                }
+            }
+        }
+        selectPayer(paidByName);
     }
 
     /**
@@ -335,14 +391,14 @@ public class AddEditExpenseActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        // At least one participant must share the expense.
+        boolean isSplit = splitModeGroup.getCheckedRadioButtonId() == R.id.radioSplitExpense;
         List<Participant> selectedParticipants = new ArrayList<>();
         for (Map.Entry<CheckBox, Participant> entry : checkBoxParticipants.entrySet()) {
             if (entry.getKey().isChecked()) {
                 selectedParticipants.add(entry.getValue());
             }
         }
-        if (selectedParticipants.isEmpty()) {
+        if (isSplit && selectedParticipants.isEmpty()) {
             textErrorSplitParticipants.setText(R.string.error_split_participants_required);
             textErrorSplitParticipants.setVisibility(View.VISIBLE);
             isValid = false;
@@ -354,6 +410,7 @@ public class AddEditExpenseActivity extends AppCompatActivity {
 
         String category = (String) spinnerCategory.getSelectedItem();
         String paidBy = (String) spinnerPaidBy.getSelectedItem();
+        long paidByMemberId = tripParticipants.get(spinnerPaidBy.getSelectedItemPosition() - 1).getId();
 
         Expense expense = new Expense(
                 tripId,
@@ -366,17 +423,40 @@ public class AddEditExpenseActivity extends AppCompatActivity {
         if (isEditMode()) {
             expense.setId(editingExpenseId);
         }
-        saveExpense(expense, selectedParticipants);
+        Map<Participant, Double> customShares = new LinkedHashMap<>();
+        if (isSplit && splitTypeGroup.getCheckedRadioButtonId() == R.id.radioCustomSplit) {
+            long totalCents = 0;
+            for (Participant participant : selectedParticipants) {
+                try {
+                    double share = Double.parseDouble(textOf(customShareInputs.get(participant)));
+                    if (share < 0) throw new NumberFormatException();
+                    long cents = Math.round(share * 100);
+                    totalCents += cents;
+                    customShares.put(participant, cents / 100.0);
+                } catch (NumberFormatException e) {
+                    textErrorSplitParticipants.setText(R.string.error_custom_split_invalid);
+                    textErrorSplitParticipants.setVisibility(View.VISIBLE);
+                    return;
+                }
+            }
+            if (totalCents != Math.round(amount * 100)) {
+                textErrorSplitParticipants.setText(R.string.error_custom_split_total);
+                textErrorSplitParticipants.setVisibility(View.VISIBLE);
+                return;
+            }
+        }
+        saveExpense(expense, paidByMemberId, selectedParticipants, customShares, isSplit);
     }
 
     /**
      * Inserts (or updates, in edit mode) the expense, then (re)saves its equal splits.
      */
-    private void saveExpense(Expense expense, List<Participant> selectedParticipants) {
+    private void saveExpense(Expense expense, long paidByMemberId, List<Participant> selectedParticipants,
+                             Map<Participant, Double> customShares, boolean isSplit) {
         try {
             long expenseId;
             if (isEditMode()) {
-                int rowsUpdated = dbHelper.updateExpense(expense);
+                int rowsUpdated = dbHelper.updateExpense(expense, paidByMemberId);
                 if (rowsUpdated <= 0) {
                     throw new SQLiteException("Update affected 0 rows for expense id: " + expense.getId());
                 }
@@ -386,7 +466,7 @@ public class AddEditExpenseActivity extends AppCompatActivity {
                 Log.d(TAG, "Expense updated, id = " + expenseId);
                 Toast.makeText(this, R.string.msg_expense_updated, Toast.LENGTH_SHORT).show();
             } else {
-                long newExpenseId = dbHelper.insertExpense(expense);
+                long newExpenseId = dbHelper.insertExpense(expense, paidByMemberId);
                 if (newExpenseId == -1) {
                     throw new SQLiteException("Insert returned -1 for expense category: " + expense.getCategory());
                 }
@@ -395,7 +475,16 @@ public class AddEditExpenseActivity extends AppCompatActivity {
                 Toast.makeText(this, R.string.msg_expense_saved, Toast.LENGTH_SHORT).show();
             }
 
-            saveEqualSplits(expenseId, expense.getAmount(), selectedParticipants);
+            if (isSplit) {
+                if (splitTypeGroup.getCheckedRadioButtonId() == R.id.radioCustomSplit) {
+                    for (Map.Entry<Participant, Double> entry : customShares.entrySet()) {
+                        dbHelper.insertExpenseParticipant(new ExpenseParticipant(expenseId,
+                                entry.getKey().getId(), entry.getValue()));
+                    }
+                } else {
+                    saveEqualSplits(expenseId, expense.getAmount(), selectedParticipants);
+                }
+            }
             finish();
         } catch (SQLiteException e) {
             Log.e(TAG, "Error saving expense for trip id=" + tripId, e);

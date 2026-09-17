@@ -51,6 +51,15 @@
             tools:text="Paid by Shraddha" />
 
         <TextView
+            android:id="@+id/textExpenseSplit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_tiny"
+            android:textColor="@color/textSecondary"
+            android:textSize="@dimen/text_size_body"
+            tools:text="Split between 4 people  Your share: ₹300.00" />
+
+        <TextView
             android:id="@+id/textExpenseDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

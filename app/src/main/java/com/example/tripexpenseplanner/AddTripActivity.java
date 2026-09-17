@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tripexpenseplanner.database.DatabaseHelper;
+import com.example.tripexpenseplanner.auth.AuthSession;
 import com.example.tripexpenseplanner.model.Trip;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -226,6 +227,7 @@ public class AddTripActivity extends AppCompatActivity {
                     throw new SQLiteException("Insert returned -1 for trip: " + trip.getTripName());
                 }
                 Log.d(TAG, "Trip saved with id = " + newTripId);
+                dbHelper.ensureCurrentUserParticipant(newTripId);
                 Toast.makeText(this, R.string.msg_trip_saved, Toast.LENGTH_SHORT).show();
             }
             finish();

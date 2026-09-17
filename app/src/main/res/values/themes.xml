@@ -25,4 +25,15 @@
         <item name="android:letterSpacing">0</item>
         <item name="android:textSize">@dimen/text_size_body</item>
     </style>
+
+    <style name="FeaturePreviewCard" parent="Widget.MaterialComponents.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/bg_feature_preview</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:padding">@dimen/padding_medium</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textSize">@dimen/text_size_body</item>
+    </style>
 </resources>

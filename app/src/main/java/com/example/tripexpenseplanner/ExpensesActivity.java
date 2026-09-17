@@ -16,6 +16,8 @@ import com.example.tripexpenseplanner.adapter.ExpenseAdapter;
 import com.example.tripexpenseplanner.database.DatabaseHelper;
 import com.example.tripexpenseplanner.model.Expense;
 import com.example.tripexpenseplanner.model.Trip;
+import com.example.tripexpenseplanner.model.ExpenseParticipant;
+import com.example.tripexpenseplanner.auth.AuthSession;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
@@ -127,6 +129,34 @@ public class ExpensesActivity extends AppCompatActivity implements ExpenseAdapte
                 .setMessage(R.string.dialog_delete_expense_message)
                 .setPositiveButton(R.string.label_delete, (dialog, which) -> deleteExpense(expense))
                 .setNegativeButton(R.string.label_cancel, null)
+                .show();
+    }
+
+    @Override
+    public void onViewExpense(Expense expense) {
+        StringBuilder details = new StringBuilder();
+        details.append(getString(R.string.format_amount, expense.getAmount())).append("\n")
+                .append(getString(R.string.format_paid_by, expense.getPaidBy())).append("\n\n")
+                .append(getString(R.string.label_split)).append("\n");
+        List<ExpenseParticipant> shares = dbHelper.getExpenseParticipantsByExpense(expense.getId());
+        long currentMemberId = dbHelper.getCurrentUserParticipantId(tripId);
+        if (shares.isEmpty()) {
+            details.append(getString(R.string.label_personal_expense));
+        } else {
+            for (ExpenseParticipant share : shares) {
+                com.example.tripexpenseplanner.model.Participant participant = dbHelper.getParticipant(share.getParticipantId());
+                if (participant != null) {
+                    details.append(participant.getName()).append(" - ")
+                            .append(getString(R.string.format_amount, share.getShareAmount()));
+                    if (share.getParticipantId() == currentMemberId) details.append("  (You)");
+                    details.append("\n");
+                }
+            }
+        }
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(expense.getCategory())
+                .setMessage(details.toString().trim())
+                .setPositiveButton(android.R.string.ok, null)
                 .show();
     }
 

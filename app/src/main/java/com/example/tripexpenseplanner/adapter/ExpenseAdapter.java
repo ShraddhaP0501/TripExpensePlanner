@@ -11,6 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tripexpenseplanner.R;
 import com.example.tripexpenseplanner.model.Expense;
+import com.example.tripexpenseplanner.database.DatabaseHelper;
+import com.example.tripexpenseplanner.model.ExpenseParticipant;
+import com.example.tripexpenseplanner.auth.AuthSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +31,9 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
         void onEditExpense(Expense expense);
 
         void onDeleteExpense(Expense expense);
+
+        default void onViewExpense(Expense expense) {
+        }
     }
 
     private List<Expense> expenses = new ArrayList<>();
@@ -66,6 +72,22 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
                     holder.itemView.getContext().getString(R.string.format_paid_by, paidBy));
         }
 
+        DatabaseHelper database = new DatabaseHelper(holder.itemView.getContext());
+        List<ExpenseParticipant> shares = database.getExpenseParticipantsByExpense(expense.getId());
+        if (shares.isEmpty()) {
+            holder.textExpenseSplit.setText(R.string.label_personal_expense);
+        } else {
+            String splitText = holder.itemView.getContext().getString(R.string.format_split_count, shares.size());
+            long currentMemberId = database.getCurrentUserParticipantId(expense.getTripId());
+            for (ExpenseParticipant share : shares) {
+                if (share.getParticipantId() == currentMemberId) {
+                    splitText += "  " + holder.itemView.getContext().getString(R.string.format_your_share, share.getShareAmount());
+                    break;
+                }
+            }
+            holder.textExpenseSplit.setText(splitText);
+        }
+
         holder.textExpenseDate.setText(expense.getExpenseDate());
 
         String description = expense.getDescription();
@@ -83,6 +105,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
                 listener.onDeleteExpense(expense);
             }
         });
+        holder.itemView.setOnClickListener(v -> listener.onViewExpense(expense));
     }
 
     @Override
@@ -94,6 +117,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
         final TextView textExpenseCategory;
         final TextView textExpenseAmount;
         final TextView textExpensePaidBy;
+        final TextView textExpenseSplit;
         final TextView textExpenseDate;
         final TextView textExpenseDescription;
         final View buttonEditExpense;
@@ -104,6 +128,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
             textExpenseCategory = itemView.findViewById(R.id.textExpenseCategory);
             textExpenseAmount = itemView.findViewById(R.id.textExpenseAmount);
             textExpensePaidBy = itemView.findViewById(R.id.textExpensePaidBy);
+            textExpenseSplit = itemView.findViewById(R.id.textExpenseSplit);
             textExpenseDate = itemView.findViewById(R.id.textExpenseDate);
             textExpenseDescription = itemView.findViewById(R.id.textExpenseDescription);
             buttonEditExpense = itemView.findViewById(R.id.buttonEditExpense);

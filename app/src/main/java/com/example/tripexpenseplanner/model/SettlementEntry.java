@@ -10,8 +10,16 @@ public class SettlementEntry {
     private final String fromName;
     private final String toName;
     private final double amount;
+    private final long fromMemberId;
+    private final long toMemberId;
 
     public SettlementEntry(String fromName, String toName, double amount) {
+        this(0, 0, fromName, toName, amount);
+    }
+
+    public SettlementEntry(long fromMemberId, long toMemberId, String fromName, String toName, double amount) {
+        this.fromMemberId = fromMemberId;
+        this.toMemberId = toMemberId;
         this.fromName = fromName;
         this.toName = toName;
         this.amount = amount;
@@ -28,4 +36,8 @@ public class SettlementEntry {
     public double getAmount() {
         return amount;
     }
+
+    public long getFromMemberId() { return fromMemberId; }
+
+    public long getToMemberId() { return toMemberId; }
 }
