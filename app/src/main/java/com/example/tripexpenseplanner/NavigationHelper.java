@@ -2,7 +2,6 @@ package com.example.tripexpenseplanner;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -46,10 +45,8 @@ public final class NavigationHelper {
                 activity.startActivity(new Intent(activity, AddTripActivity.class));
                 return true;
             } else if (itemId == R.id.navExpenses) {
-                Toast.makeText(activity, R.string.msg_feature_coming_soon, Toast.LENGTH_SHORT).show();
-                // Returning false keeps the current tab highlighted — there's no
-                // trip-independent Expenses screen to switch to from here.
-                return false;
+                activity.startActivity(new Intent(activity, MyTripsActivity.class));
+                return true;
             }
             return false;
         });

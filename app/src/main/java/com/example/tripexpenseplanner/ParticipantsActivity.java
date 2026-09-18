@@ -91,6 +91,7 @@ public class ParticipantsActivity extends AppCompatActivity implements Participa
     }
 
     private void loadParticipants() {
+        dbHelper.ensureCurrentUserParticipant(tripId);
         List<Participant> participants = dbHelper.getParticipantsByTrip(tripId);
         participantAdapter.setParticipants(participants);
 
@@ -124,6 +125,10 @@ public class ParticipantsActivity extends AppCompatActivity implements Participa
     }
 
     private void deleteParticipant(Participant participant) {
+        if (participant.getUserId() > 0) {
+            Toast.makeText(this, R.string.error_cannot_delete_owner, Toast.LENGTH_LONG).show();
+            return;
+        }
         try {
             // Splits reference this participant via a foreign key — they must go
             // first, otherwise SQLite refuses to delete a participant still part

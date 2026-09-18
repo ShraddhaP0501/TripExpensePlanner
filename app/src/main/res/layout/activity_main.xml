@@ -34,6 +34,33 @@
             android:textSize="@dimen/text_size_title"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/textGreeting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_medium"
+            android:layout_marginTop="@dimen/padding_medium"
+            android:layout_marginEnd="@dimen/padding_medium"
+            android:textColor="@color/textPrimary"
+            android:textSize="@dimen/text_size_title"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/buttonLogout"
+            style="@style/AppButton.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="@string/label_logout" />
+
+        <Button
+            android:id="@+id/buttonProfile"
+            style="@style/AppButton.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="@string/title_profile" />
+
         <!-- Total Expenses summary card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
@@ -151,6 +178,42 @@
                 tools:listitem="@layout/item_upcoming_activity" />
 
         </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_medium"
+            android:layout_marginTop="@dimen/padding_large"
+            android:text="@string/label_coming_soon"
+            android:textColor="@color/textPrimary"
+            android:textSize="@dimen/text_size_subtitle"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_medium"
+            android:layout_marginTop="@dimen/padding_small"
+            android:layout_marginEnd="@dimen/padding_medium"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/cardCollaboration"
+                style="@style/FeaturePreviewCard"
+                android:text="@string/preview_collaboration" />
+
+            <TextView
+                android:id="@+id/cardMaps"
+                style="@style/FeaturePreviewCard"
+                android:layout_marginTop="@dimen/padding_small"
+                android:text="@string/preview_maps" />
+
+            <TextView
+                android:id="@+id/cardCurrency"
+                style="@style/FeaturePreviewCard"
+                android:layout_marginTop="@dimen/padding_small"
+                android:text="@string/preview_currency" />
+        </LinearLayout>
 
     </LinearLayout>
 

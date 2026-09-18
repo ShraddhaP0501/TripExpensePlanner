@@ -16,6 +16,7 @@ import com.example.tripexpenseplanner.model.Participant;
 import com.example.tripexpenseplanner.model.Reminder;
 import com.example.tripexpenseplanner.model.Trip;
 import com.example.tripexpenseplanner.model.TripActivity;
+import com.example.tripexpenseplanner.auth.AuthSession;
 
 /**
  * Central SQLite access point for the whole app.
@@ -25,7 +26,16 @@ import com.example.tripexpenseplanner.model.TripActivity;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "TripExpensePlanner.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 4;
+    private final Context context;
+
+    // ---------- users ----------
+    public static final String TABLE_USERS = "users";
+    public static final String COLUMN_USER_ID = "id";
+    public static final String COLUMN_USER_NAME = "name";
+    public static final String COLUMN_USER_EMAIL = "email";
+    public static final String COLUMN_USER_PASSWORD_HASH = "password_hash";
+    public static final String COLUMN_USER_CREATED_AT = "created_at";
 
     // ---------- trips ----------
     public static final String TABLE_TRIPS = "trips";
@@ -35,6 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_TRIP_START_DATE = "start_date";
     public static final String COLUMN_TRIP_END_DATE = "end_date";
     public static final String COLUMN_TRIP_NOTES = "notes";
+    public static final String COLUMN_TRIP_USER_ID = "user_id";
 
     // ---------- activities ----------
     public static final String TABLE_ACTIVITIES = "activities";
@@ -54,12 +65,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_EXPENSE_PAID_BY = "paid_by";
     public static final String COLUMN_EXPENSE_DESCRIPTION = "description";
     public static final String COLUMN_EXPENSE_DATE = "expense_date";
+    public static final String COLUMN_EXPENSE_PAID_BY_MEMBER_ID = "paid_by_member_id";
 
     // ---------- participants ----------
     public static final String TABLE_PARTICIPANTS = "participants";
     public static final String COLUMN_PARTICIPANT_ID = "id";
     public static final String COLUMN_PARTICIPANT_TRIP_ID = "trip_id";
     public static final String COLUMN_PARTICIPANT_NAME = "name";
+    public static final String COLUMN_PARTICIPANT_CONTACT = "contact";
+    public static final String COLUMN_PARTICIPANT_USER_ID = "user_id";
+
+    // ---------- settlements ----------
+    public static final String TABLE_SETTLEMENTS = "settlements";
+    public static final String COLUMN_SETTLEMENT_ID = "id";
+    public static final String COLUMN_SETTLEMENT_TRIP_ID = "trip_id";
+    public static final String COLUMN_SETTLEMENT_FROM_MEMBER_ID = "from_member_id";
+    public static final String COLUMN_SETTLEMENT_TO_MEMBER_ID = "to_member_id";
+    public static final String COLUMN_SETTLEMENT_AMOUNT = "amount";
+    public static final String COLUMN_SETTLEMENT_DATE = "date";
+    public static final String COLUMN_SETTLEMENT_STATUS = "status";
 
     // ---------- expense_participants ----------
     public static final String TABLE_EXPENSE_PARTICIPANTS = "expense_participants";
@@ -85,8 +109,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_TRIP_DESTINATION + " TEXT NOT NULL, " +
                     COLUMN_TRIP_START_DATE + " TEXT NOT NULL, " +
                     COLUMN_TRIP_END_DATE + " TEXT NOT NULL, " +
-                    COLUMN_TRIP_NOTES + " TEXT" +
+                        COLUMN_TRIP_NOTES + " TEXT, " +
+                        COLUMN_TRIP_USER_ID + " INTEGER" +
                     ");";
+
+                private static final String CREATE_TABLE_USERS =
+                    "CREATE TABLE " + TABLE_USERS + " (" +
+                        COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        COLUMN_USER_NAME + " TEXT NOT NULL, " +
+                        COLUMN_USER_EMAIL + " TEXT NOT NULL UNIQUE, " +
+                        COLUMN_USER_PASSWORD_HASH + " TEXT NOT NULL, " +
+                        COLUMN_USER_CREATED_AT + " INTEGER NOT NULL" +
+                        ");";
 
     private static final String CREATE_TABLE_ACTIVITIES =
             "CREATE TABLE " + TABLE_ACTIVITIES + " (" +
@@ -106,6 +140,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_EXPENSE_CATEGORY + " TEXT NOT NULL, " +
                     COLUMN_EXPENSE_AMOUNT + " REAL NOT NULL, " +
                     COLUMN_EXPENSE_PAID_BY + " TEXT, " +
+                    COLUMN_EXPENSE_PAID_BY_MEMBER_ID + " INTEGER, " +
                     COLUMN_EXPENSE_DESCRIPTION + " TEXT, " +
                     COLUMN_EXPENSE_DATE + " TEXT NOT NULL, " +
                     "FOREIGN KEY(" + COLUMN_EXPENSE_TRIP_ID + ") REFERENCES " + TABLE_TRIPS + "(" + COLUMN_TRIP_ID + ")" +
@@ -116,8 +151,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_PARTICIPANT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COLUMN_PARTICIPANT_TRIP_ID + " INTEGER NOT NULL, " +
                     COLUMN_PARTICIPANT_NAME + " TEXT NOT NULL, " +
+                        COLUMN_PARTICIPANT_CONTACT + " TEXT, " +
+                        COLUMN_PARTICIPANT_USER_ID + " INTEGER, " +
                     "FOREIGN KEY(" + COLUMN_PARTICIPANT_TRIP_ID + ") REFERENCES " + TABLE_TRIPS + "(" + COLUMN_TRIP_ID + ")" +
                     ");";
+
+                private static final String CREATE_TABLE_SETTLEMENTS =
+                    "CREATE TABLE " + TABLE_SETTLEMENTS + " (" +
+                        COLUMN_SETTLEMENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        COLUMN_SETTLEMENT_TRIP_ID + " INTEGER NOT NULL, " +
+                        COLUMN_SETTLEMENT_FROM_MEMBER_ID + " INTEGER NOT NULL, " +
+                        COLUMN_SETTLEMENT_TO_MEMBER_ID + " INTEGER NOT NULL, " +
+                        COLUMN_SETTLEMENT_AMOUNT + " REAL NOT NULL, " +
+                        COLUMN_SETTLEMENT_DATE + " TEXT NOT NULL, " +
+                        COLUMN_SETTLEMENT_STATUS + " TEXT NOT NULL, " +
+                        "FOREIGN KEY(" + COLUMN_SETTLEMENT_TRIP_ID + ") REFERENCES " + TABLE_TRIPS + "(" + COLUMN_TRIP_ID + "), " +
+                        "FOREIGN KEY(" + COLUMN_SETTLEMENT_FROM_MEMBER_ID + ") REFERENCES " + TABLE_PARTICIPANTS + "(" + COLUMN_PARTICIPANT_ID + "), " +
+                        "FOREIGN KEY(" + COLUMN_SETTLEMENT_TO_MEMBER_ID + ") REFERENCES " + TABLE_PARTICIPANTS + "(" + COLUMN_PARTICIPANT_ID + ")" +
+                        ");";
 
     private static final String CREATE_TABLE_EXPENSE_PARTICIPANTS =
             "CREATE TABLE " + TABLE_EXPENSE_PARTICIPANTS + " (" +
@@ -143,6 +194,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public DatabaseHelper(Context context) {
         super(context.getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context.getApplicationContext();
     }
 
     @Override
@@ -154,27 +206,72 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        db.execSQL(CREATE_TABLE_USERS);
         db.execSQL(CREATE_TABLE_TRIPS);
         db.execSQL(CREATE_TABLE_ACTIVITIES);
         db.execSQL(CREATE_TABLE_EXPENSES);
         db.execSQL(CREATE_TABLE_PARTICIPANTS);
         db.execSQL(CREATE_TABLE_EXPENSE_PARTICIPANTS);
         db.execSQL(CREATE_TABLE_REMINDERS);
+        db.execSQL(CREATE_TABLE_SETTLEMENTS);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Simple upgrade strategy for now: drop everything and recreate.
-        // Child tables are dropped before their parent tables.
-        // NOTE: this wipes any existing data on an upgrade — fine for this
-        // project's current stage, but not something to ship as-is.
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_REMINDERS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPENSE_PARTICIPANTS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PARTICIPANTS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPENSES);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACTIVITIES);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRIPS);
-        onCreate(db);
+        if (oldVersion < 3) {
+            db.execSQL(CREATE_TABLE_USERS);
+            db.execSQL("ALTER TABLE " + TABLE_TRIPS + " ADD COLUMN " + COLUMN_TRIP_USER_ID + " INTEGER");
+        }
+        if (oldVersion < 4) {
+            db.execSQL("ALTER TABLE " + TABLE_EXPENSES + " ADD COLUMN " + COLUMN_EXPENSE_PAID_BY_MEMBER_ID + " INTEGER");
+            db.execSQL("ALTER TABLE " + TABLE_PARTICIPANTS + " ADD COLUMN " + COLUMN_PARTICIPANT_CONTACT + " TEXT");
+            db.execSQL("ALTER TABLE " + TABLE_PARTICIPANTS + " ADD COLUMN " + COLUMN_PARTICIPANT_USER_ID + " INTEGER");
+            db.execSQL(CREATE_TABLE_SETTLEMENTS);
+        }
+    }
+
+    public long createUser(String name, String email, String passwordHash) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_USER_NAME, name);
+        values.put(COLUMN_USER_EMAIL, email);
+        values.put(COLUMN_USER_PASSWORD_HASH, passwordHash);
+        values.put(COLUMN_USER_CREATED_AT, System.currentTimeMillis());
+        return getWritableDatabase().insert(TABLE_USERS, null, values);
+    }
+
+    public Cursor findUserByEmail(String email) {
+        return getReadableDatabase().query(TABLE_USERS, null, COLUMN_USER_EMAIL + " = ?",
+                new String[]{email}, null, null, null);
+    }
+
+    public Cursor findUserById(long userId) {
+        return getReadableDatabase().query(TABLE_USERS, null, COLUMN_USER_ID + " = ?",
+                new String[]{String.valueOf(userId)}, null, null, null);
+    }
+
+    public int updateUserPassword(long userId, String passwordHash) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_USER_PASSWORD_HASH, passwordHash);
+        return getWritableDatabase().update(TABLE_USERS, values, COLUMN_USER_ID + " = ?",
+                new String[]{String.valueOf(userId)});
+    }
+
+    public String getUserName(long userId) {
+        try (Cursor cursor = getReadableDatabase().query(TABLE_USERS,
+                new String[]{COLUMN_USER_NAME}, COLUMN_USER_ID + " = ?",
+                new String[]{String.valueOf(userId)}, null, null, null)) {
+            return cursor.moveToFirst() ? cursor.getString(0) : "";
+        }
+    }
+
+    public void claimUnownedTrips(long userId) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TRIP_USER_ID, userId);
+        getWritableDatabase().update(TABLE_TRIPS, values, COLUMN_TRIP_USER_ID + " IS NULL", null);
+    }
+
+    private long currentUserId() {
+        return AuthSession.getUserId(context);
     }
 
     // =========================================================================================
@@ -184,6 +281,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public long insertTrip(Trip trip) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put(COLUMN_TRIP_USER_ID, currentUserId());
         values.put(COLUMN_TRIP_NAME, trip.getTripName());
         values.put(COLUMN_TRIP_DESTINATION, trip.getDestination());
         values.put(COLUMN_TRIP_START_DATE, trip.getStartDate());
@@ -200,20 +298,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_TRIP_START_DATE, trip.getStartDate());
         values.put(COLUMN_TRIP_END_DATE, trip.getEndDate());
         values.put(COLUMN_TRIP_NOTES, trip.getNotes());
-        return db.update(TABLE_TRIPS, values, COLUMN_TRIP_ID + " = ?",
-                new String[]{String.valueOf(trip.getId())});
+        return db.update(TABLE_TRIPS, values, COLUMN_TRIP_ID + " = ? AND " + COLUMN_TRIP_USER_ID + " = ?",
+            new String[]{String.valueOf(trip.getId()), String.valueOf(currentUserId())});
     }
 
     public int deleteTrip(long tripId) {
         SQLiteDatabase db = getWritableDatabase();
-        return db.delete(TABLE_TRIPS, COLUMN_TRIP_ID + " = ?", new String[]{String.valueOf(tripId)});
+        return db.delete(TABLE_TRIPS, COLUMN_TRIP_ID + " = ? AND " + COLUMN_TRIP_USER_ID + " = ?",
+            new String[]{String.valueOf(tripId), String.valueOf(currentUserId())});
     }
 
     public Trip getTrip(long tripId) {
         SQLiteDatabase db = getReadableDatabase();
         Trip trip = null;
-        try (Cursor cursor = db.query(TABLE_TRIPS, null, COLUMN_TRIP_ID + " = ?",
-                new String[]{String.valueOf(tripId)}, null, null, null)) {
+        try (Cursor cursor = db.query(TABLE_TRIPS, null, COLUMN_TRIP_ID + " = ? AND " + COLUMN_TRIP_USER_ID + " = ?",
+            new String[]{String.valueOf(tripId), String.valueOf(currentUserId())}, null, null, null)) {
             if (cursor.moveToFirst()) {
                 trip = cursorToTrip(cursor);
             }
@@ -224,7 +323,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<Trip> getAllTrips() {
         List<Trip> trips = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
-        try (Cursor cursor = db.query(TABLE_TRIPS, null, null, null, null, null,
+        try (Cursor cursor = db.query(TABLE_TRIPS, null, COLUMN_TRIP_USER_ID + " = ?",
+            new String[]{String.valueOf(currentUserId())}, null, null,
                 COLUMN_TRIP_ID + " ASC")) {
             while (cursor.moveToNext()) {
                 trips.add(cursorToTrip(cursor));
@@ -293,8 +393,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         // Order by date first, then time, so the itinerary reads chronologically.
         String orderBy = COLUMN_ACTIVITY_DATE + " ASC, " + COLUMN_ACTIVITY_TIME + " ASC";
-        try (Cursor cursor = db.query(TABLE_ACTIVITIES, null, COLUMN_ACTIVITY_TRIP_ID + " = ?",
-                new String[]{String.valueOf(tripId)}, null, null, orderBy)) {
+        String selection = COLUMN_ACTIVITY_TRIP_ID + " = ? AND EXISTS (SELECT 1 FROM " + TABLE_TRIPS
+            + " WHERE " + TABLE_TRIPS + "." + COLUMN_TRIP_ID + " = " + TABLE_ACTIVITIES + "."
+            + COLUMN_ACTIVITY_TRIP_ID + " AND " + COLUMN_TRIP_USER_ID + " = ?)";
+        try (Cursor cursor = db.query(TABLE_ACTIVITIES, null, selection,
+            new String[]{String.valueOf(tripId), String.valueOf(currentUserId())}, null, null, orderBy)) {
             while (cursor.moveToNext()) {
                 activities.add(cursorToActivity(cursor));
             }
@@ -318,24 +421,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // =========================================================================================
 
     public long insertExpense(Expense expense) {
+        return insertExpense(expense, null);
+    }
+
+    public long insertExpense(Expense expense, Long paidByMemberId) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_EXPENSE_TRIP_ID, expense.getTripId());
         values.put(COLUMN_EXPENSE_CATEGORY, expense.getCategory());
         values.put(COLUMN_EXPENSE_AMOUNT, expense.getAmount());
         values.put(COLUMN_EXPENSE_PAID_BY, expense.getPaidBy());
+        if (paidByMemberId != null) {
+            values.put(COLUMN_EXPENSE_PAID_BY_MEMBER_ID, paidByMemberId);
+        }
         values.put(COLUMN_EXPENSE_DESCRIPTION, expense.getDescription());
         values.put(COLUMN_EXPENSE_DATE, expense.getExpenseDate());
         return db.insert(TABLE_EXPENSES, null, values);
     }
 
     public int updateExpense(Expense expense) {
+        return updateExpense(expense, null);
+    }
+
+    public int updateExpense(Expense expense, Long paidByMemberId) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_EXPENSE_TRIP_ID, expense.getTripId());
         values.put(COLUMN_EXPENSE_CATEGORY, expense.getCategory());
         values.put(COLUMN_EXPENSE_AMOUNT, expense.getAmount());
         values.put(COLUMN_EXPENSE_PAID_BY, expense.getPaidBy());
+        if (paidByMemberId != null) {
+            values.put(COLUMN_EXPENSE_PAID_BY_MEMBER_ID, paidByMemberId);
+        }
         values.put(COLUMN_EXPENSE_DESCRIPTION, expense.getDescription());
         values.put(COLUMN_EXPENSE_DATE, expense.getExpenseDate());
         return db.update(TABLE_EXPENSES, values, COLUMN_EXPENSE_ID + " = ?",
@@ -359,11 +476,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return expense;
     }
 
+    public long getExpensePaidByMemberId(long expenseId) {
+        try (Cursor cursor = getReadableDatabase().query(TABLE_EXPENSES,
+                new String[]{COLUMN_EXPENSE_PAID_BY_MEMBER_ID}, COLUMN_EXPENSE_ID + " = ?",
+                new String[]{String.valueOf(expenseId)}, null, null, null)) {
+            if (cursor.moveToFirst() && !cursor.isNull(0)) return cursor.getLong(0);
+        }
+        return -1L;
+    }
+
     public List<Expense> getExpensesByTrip(long tripId) {
         List<Expense> expenses = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
-        try (Cursor cursor = db.query(TABLE_EXPENSES, null, COLUMN_EXPENSE_TRIP_ID + " = ?",
-                new String[]{String.valueOf(tripId)}, null, null, COLUMN_EXPENSE_DATE + " ASC")) {
+        String selection = COLUMN_EXPENSE_TRIP_ID + " = ? AND EXISTS (SELECT 1 FROM " + TABLE_TRIPS
+            + " WHERE " + TABLE_TRIPS + "." + COLUMN_TRIP_ID + " = " + TABLE_EXPENSES + "."
+            + COLUMN_EXPENSE_TRIP_ID + " AND " + COLUMN_TRIP_USER_ID + " = ?)";
+        try (Cursor cursor = db.query(TABLE_EXPENSES, null, selection,
+            new String[]{String.valueOf(tripId), String.valueOf(currentUserId())}, null, null, COLUMN_EXPENSE_DATE + " ASC")) {
             while (cursor.moveToNext()) {
                 expenses.add(cursorToExpense(cursor));
             }
@@ -433,7 +562,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_PARTICIPANT_TRIP_ID, participant.getTripId());
         values.put(COLUMN_PARTICIPANT_NAME, participant.getName());
+        values.put(COLUMN_PARTICIPANT_CONTACT, participant.getContact());
+        if (participant.getUserId() > 0) values.put(COLUMN_PARTICIPANT_USER_ID, participant.getUserId());
         return db.insert(TABLE_PARTICIPANTS, null, values);
+    }
+
+    public long ensureCurrentUserParticipant(long tripId) {
+        long userId = currentUserId();
+        try (Cursor cursor = getReadableDatabase().query(TABLE_PARTICIPANTS,
+                new String[]{COLUMN_PARTICIPANT_ID}, COLUMN_PARTICIPANT_TRIP_ID + " = ? AND " + COLUMN_PARTICIPANT_USER_ID + " = ?",
+                new String[]{String.valueOf(tripId), String.valueOf(userId)}, null, null, null)) {
+            if (cursor.moveToFirst()) return cursor.getLong(0);
+        }
+        return insertParticipant(new Participant(tripId, AuthSession.getUserName(context), null, userId));
+    }
+
+    public long getCurrentUserParticipantId(long tripId) {
+        try (Cursor cursor = getReadableDatabase().query(TABLE_PARTICIPANTS,
+                new String[]{COLUMN_PARTICIPANT_ID}, COLUMN_PARTICIPANT_TRIP_ID + " = ? AND " + COLUMN_PARTICIPANT_USER_ID + " = ?",
+                new String[]{String.valueOf(tripId), String.valueOf(currentUserId())}, null, null, null)) {
+            return cursor.moveToFirst() ? cursor.getLong(0) : -1L;
+        }
+    }
+
+    public boolean participantNameExists(long tripId, String name, long excludedId) {
+        try (Cursor cursor = getReadableDatabase().query(TABLE_PARTICIPANTS,
+                new String[]{COLUMN_PARTICIPANT_ID}, COLUMN_PARTICIPANT_TRIP_ID + " = ? AND lower(" + COLUMN_PARTICIPANT_NAME + ") = lower(?) AND " + COLUMN_PARTICIPANT_ID + " != ?",
+                new String[]{String.valueOf(tripId), name, String.valueOf(excludedId)}, null, null, null)) {
+            return cursor.moveToFirst();
+        }
     }
 
     public int updateParticipant(Participant participant) {
@@ -441,6 +598,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_PARTICIPANT_TRIP_ID, participant.getTripId());
         values.put(COLUMN_PARTICIPANT_NAME, participant.getName());
+        values.put(COLUMN_PARTICIPANT_CONTACT, participant.getContact());
         return db.update(TABLE_PARTICIPANTS, values, COLUMN_PARTICIPANT_ID + " = ?",
                 new String[]{String.valueOf(participant.getId())});
     }
@@ -466,8 +624,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<Participant> getParticipantsByTrip(long tripId) {
         List<Participant> participants = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
-        try (Cursor cursor = db.query(TABLE_PARTICIPANTS, null, COLUMN_PARTICIPANT_TRIP_ID + " = ?",
-                new String[]{String.valueOf(tripId)}, null, null, COLUMN_PARTICIPANT_NAME + " ASC")) {
+        String selection = COLUMN_PARTICIPANT_TRIP_ID + " = ? AND EXISTS (SELECT 1 FROM " + TABLE_TRIPS
+            + " WHERE " + TABLE_TRIPS + "." + COLUMN_TRIP_ID + " = " + TABLE_PARTICIPANTS + "."
+            + COLUMN_PARTICIPANT_TRIP_ID + " AND " + COLUMN_TRIP_USER_ID + " = ?)";
+        try (Cursor cursor = db.query(TABLE_PARTICIPANTS, null, selection,
+            new String[]{String.valueOf(tripId), String.valueOf(currentUserId())}, null, null, COLUMN_PARTICIPANT_NAME + " ASC")) {
             while (cursor.moveToNext()) {
                 participants.add(cursorToParticipant(cursor));
             }
@@ -480,7 +641,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         participant.setId(cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_PARTICIPANT_ID)));
         participant.setTripId(cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_PARTICIPANT_TRIP_ID)));
         participant.setName(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PARTICIPANT_NAME)));
+        int contactIndex = cursor.getColumnIndex(COLUMN_PARTICIPANT_CONTACT);
+        if (contactIndex >= 0) participant.setContact(cursor.getString(contactIndex));
+        int userIndex = cursor.getColumnIndex(COLUMN_PARTICIPANT_USER_ID);
+        if (userIndex >= 0 && !cursor.isNull(userIndex)) participant.setUserId(cursor.getLong(userIndex));
         return participant;
+    }
+
+    public long insertSettlement(long tripId, long fromMemberId, long toMemberId, double amount) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_SETTLEMENT_TRIP_ID, tripId);
+        values.put(COLUMN_SETTLEMENT_FROM_MEMBER_ID, fromMemberId);
+        values.put(COLUMN_SETTLEMENT_TO_MEMBER_ID, toMemberId);
+        values.put(COLUMN_SETTLEMENT_AMOUNT, amount);
+        values.put(COLUMN_SETTLEMENT_DATE, new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(new java.util.Date()));
+        values.put(COLUMN_SETTLEMENT_STATUS, "PAID");
+        return getWritableDatabase().insert(TABLE_SETTLEMENTS, null, values);
+    }
+
+    public double getSettledAmount(long tripId, long fromMemberId, long toMemberId) {
+        String query = "SELECT COALESCE(SUM(" + COLUMN_SETTLEMENT_AMOUNT + "), 0) FROM " + TABLE_SETTLEMENTS
+                + " WHERE " + COLUMN_SETTLEMENT_TRIP_ID + " = ? AND " + COLUMN_SETTLEMENT_FROM_MEMBER_ID + " = ? AND "
+                + COLUMN_SETTLEMENT_TO_MEMBER_ID + " = ? AND " + COLUMN_SETTLEMENT_STATUS + " = 'PAID'";
+        try (Cursor cursor = getReadableDatabase().rawQuery(query, new String[]{String.valueOf(tripId), String.valueOf(fromMemberId), String.valueOf(toMemberId)})) {
+            return cursor.moveToFirst() ? cursor.getDouble(0) : 0;
+        }
     }
 
     // =========================================================================================
@@ -608,8 +793,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<Reminder> reminders = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         String orderBy = COLUMN_REMINDER_DATE + " ASC, " + COLUMN_REMINDER_TIME + " ASC";
-        try (Cursor cursor = db.query(TABLE_REMINDERS, null, COLUMN_REMINDER_TRIP_ID + " = ?",
-                new String[]{String.valueOf(tripId)}, null, null, orderBy)) {
+        String selection = COLUMN_REMINDER_TRIP_ID + " = ? AND EXISTS (SELECT 1 FROM " + TABLE_TRIPS
+            + " WHERE " + TABLE_TRIPS + "." + COLUMN_TRIP_ID + " = " + TABLE_REMINDERS + "."
+            + COLUMN_REMINDER_TRIP_ID + " AND " + COLUMN_TRIP_USER_ID + " = ?)";
+        try (Cursor cursor = db.query(TABLE_REMINDERS, null, selection,
+            new String[]{String.valueOf(tripId), String.valueOf(currentUserId())}, null, null, orderBy)) {
             while (cursor.moveToNext()) {
                 reminders.add(cursorToReminder(cursor));
             }
@@ -625,7 +813,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<Reminder> reminders = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         String orderBy = COLUMN_REMINDER_DATE + " ASC, " + COLUMN_REMINDER_TIME + " ASC";
-        try (Cursor cursor = db.query(TABLE_REMINDERS, null, null, null, null, null, orderBy)) {
+        String selection = "EXISTS (SELECT 1 FROM " + TABLE_TRIPS + " WHERE " + TABLE_TRIPS + "."
+            + COLUMN_TRIP_ID + " = " + TABLE_REMINDERS + "." + COLUMN_REMINDER_TRIP_ID
+            + " AND " + COLUMN_TRIP_USER_ID + " = ?)";
+        try (Cursor cursor = db.query(TABLE_REMINDERS, null, selection,
+            new String[]{String.valueOf(currentUserId())}, null, null, orderBy)) {
             while (cursor.moveToNext()) {
                 reminders.add(cursorToReminder(cursor));
             }
